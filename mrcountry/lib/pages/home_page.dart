@@ -1,13 +1,9 @@
-import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:mrcountry/main.dart';
 import 'package:mrcountry/models/country.dart';
 import 'package:mrcountry/pages/location_detail.dart';
 import 'package:mrcountry/services/api.dart';
 import 'package:mrcountry/services/utils.dart';
 import 'package:simple_search_bar/simple_search_bar.dart';
-import 'package:splashscreen/splashscreen.dart';
-import 'package:websafe_svg/websafe_svg.dart';
 
 class HomePage extends StatefulWidget {
   @override

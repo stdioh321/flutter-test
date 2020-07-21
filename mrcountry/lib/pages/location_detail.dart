@@ -1,11 +1,7 @@
-import 'dart:math';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:mrcountry/models/country.dart';
 import 'package:mrcountry/services/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:websafe_svg/websafe_svg.dart';
 // import 'dart: mirrors';
 
 class LocationDetailPage extends StatefulWidget {

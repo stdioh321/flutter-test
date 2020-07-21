@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mrcountry/pages/choose_location.dart';
 import 'package:mrcountry/pages/home_page.dart';
-import 'package:mrcountry/pages/loading_page.dart';
-import 'package:mrcountry/pages/location_detail.dart';
 import 'package:mrcountry/services/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:splashscreen/splashscreen.dart';

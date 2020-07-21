@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:mrcountry/models/country.dart';
 import 'package:mrcountry/models/time.dart';
-import 'package:mrcountry/services/world_time.dart';
 
 class Api {
   String _host = "http://worldtimeapi.org/";

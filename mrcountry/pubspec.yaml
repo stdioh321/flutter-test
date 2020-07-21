@@ -23,19 +23,23 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  # camera:
-  # path_provider:
-  # path:
-  # carousel_slider: ^2.2.1
+  
   http: ^0.12.2
-  websafe_svg: ^1.1.0
-  flappy_search_bar: ^1.4.1
+  
   simple_search_bar: ^0.1.7
   cached_network_image: ^2.2.0+1
   url_launcher: ^5.5.0
   splashscreen: ^1.2.0
   shared_preferences: ^0.5.8
-
+  device_apps: ^1.1.0
+  path_provider: any
+  # camera:
+  # path_provider:
+  # path:
+  # carousel_slider: ^2.2.1
+  # websafe_svg: ^1.1.0
+  # flappy_search_bar: ^1.4.1
+  
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3

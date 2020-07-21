@@ -25,8 +25,8 @@ dependencies:
     sdk: flutter
     
   shared_preferences: ^0.5.3 
-  permission_handler: ^5.0.1+1
-  contacts_service: ^0.4.6
+  # permission_handler: ^5.0.1+1
+  # contacts_service: ^0.4.6
   loading: ^1.0.2
   
   loading_overlay: ^0.2.1
