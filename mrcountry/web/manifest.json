@@ -1,6 +1,6 @@
 {
-    "name": "mycountry",
-    "short_name": "mycountry",
+    "name": "mrcountry",
+    "short_name": "mrcountry",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
