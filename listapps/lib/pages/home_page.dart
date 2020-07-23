@@ -1,155 +1,201 @@
-import 'package:device_apps/device_apps.dart';
-import 'package:flutter/gestures.dart';
+import 'dart:convert';
+import 'dart:io' as io;
+import 'dart:typed_data';
+
+import 'package:archive/archive_io.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:listapps/main.dart';
-import 'package:listapps/models/joke.dart';
-import 'package:listapps/services/api.dart';
 import 'package:listapps/services/utils.dart';
-import 'package:url_launcher/url_launcher.dart';
+// import 'package:archive/archive.dart';
+import 'package:path_provider/path_provider.dart' as pp;
+import 'package:permission_handler/permission_handler.dart';
+import 'package:charset_converter/charset_converter.dart';
+import 'package:device_apps/device_apps.dart';
 
 class HomePage extends StatefulWidget {
+  @required
+  ApplicationWithIcon app;
+  String isUnity;
+  String unityTech;
+
+  HomePage({this.app});
+
   @override
   _HomePageState createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  Joke joke;
-  bool loading = false;
-  void getJoke() async {
-    // joke = Joke();
+  @override
+  void initState() {
+    // TODO: implement initState
 
+    super.initState();
+    isUnity();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  Future<void> isUnity() async {
+    // print(widget.app.apkFilePath);
+    var status = await Permission.storage.status;
+    if (!status.isGranted) {
+      await Permission.storage.request();
+    }
+    if (status.isDenied) return;
+
+    var tmpFile = io.File(widget.app.apkFilePath);
+    if (!(await tmpFile.exists())) {
+      Navigator.pop(context);
+      return;
+    }
+    var bytes = tmpFile.readAsBytesSync();
+    var archive = ZipDecoder().decodeBytes(bytes);
+    for (ArchiveFile aF in archive) {
+      if (aF.name.contains(RegExp(r'mono\.so$', caseSensitive: false)))
+        widget.unityTech = "Mono";
+      else if (aF.name.contains(RegExp(r'ilcpp\.so$', caseSensitive: false)))
+        widget.unityTech = "Ilcpp";
+      else if (aF.name.contains(RegExp(r'il2cpp\.so$', caseSensitive: false)))
+        widget.unityTech = "Il2cpp";
+
+      if (aF.name.toLowerCase() ==
+          "assets/bin/Data/Resources/unity_builtin_extra".toLowerCase()) {
+        // print(aF.name);
+        List content = aF.content;
+        setState(() {
+          widget.isUnity = utf8.decode(content.sublist(20, 32));
+        });
+      }
+    }
     setState(() {
-      loading = true;
-      joke = null;
+      widget.unityTech = widget.unityTech;
     });
+  }
+
+  Future<void> getDir() async {
+    print(DateTime.now());
     try {
-      Joke j = await Api.instance.getJoke();
-      // print(j.toJson());
-      setState(() {
-        joke = j;
-      });
+      var status = await Permission.storage.status;
+      if (!status.isGranted) {
+        await Permission.storage.request();
+      }
+      if (status.isDenied) return;
+
+      var tmpFile = io.File(widget.app.apkFilePath);
+      if (!(await tmpFile.exists())) {
+        Navigator.pop(context);
+        return;
+      }
+      var bytes = tmpFile.readAsBytesSync();
+      var archive = ZipDecoder().decodeBytes(bytes);
+      for (ArchiveFile aF in archive) {
+        print(aF.name);
+      }
     } catch (e) {
       print(e);
     }
-    setState(() {
-      loading = false;
-    });
-  }
-
-  Widget buidBody() {
-    if (loading) {
-      return Center(
-        child: Text("Loading",
-            style: TextStyle(
-              fontSize: 30,
-              color: Theme.of(context).primaryColor,
-            )),
-      );
-    } else if (joke != null) {
-      return Container(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            InkWell(
-              onTap: () {
-                _launchURL(
-                    "https://sv443.net/jokeapi/v2/joke/Any?idRange=${joke.id}-${joke.id}");
-              },
-              highlightColor: Theme.of(context).primaryColor,
-              focusColor: Theme.of(context).primaryColor,
-              child: ListTile(
-                title: Text(
-                  joke.setup != null ? joke.setup : joke.joke,
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                      // fontSize: 26,
-                      ),
-                ),
-                subtitle: Text(
-                  joke.delivery != null ? joke.delivery : "",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      );
-    } else
-      return Container(
-        child: Center(
-          child: Text("Nothing"),
-        ),
-      );
-  }
-
-  void _launchURL(String url) async {
-    // const url = 'https://flutter.dev';
-    if (await canLaunch(url)) {
-      await launch(url);
-    } else {
-      throw 'Could not launch $url';
-    }
+    print(DateTime.now());
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "List Apps",
-        ),
-        backgroundColor: Theme.of(context).primaryColor,
-        // centerTitle: false,
-      ),
-      body: Column(
-        // mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Expanded(
-            // flex: 1,
-            child: Container(
-              // color: Colors.red,
-              height: 300,
-              padding: EdgeInsets.fromLTRB(0, 15, 0, 0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text("Api: "),
-                  InkWell(
-                    onTap: () {
-                      _launchURL(
-                          "https://sv443.net/jokeapi/v2/?ref=apilist.fun");
-                    },
-                    child: Text(
-                      "https://sv443.net/jokeapi/v2/?ref=apilist.fun",
-                      style: TextStyle(
-                        color: Colors.blue,
-                      ),
-                    ),
-                  )
-                ],
+        appBar: AppBar(
+          title: Text(
+            "${widget.app.appName}",
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(
+                Icons.color_lens,
               ),
-            ),
-          ),
-          Expanded(
-            flex: 20,
-            child: buidBody(),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          getJoke();
-        },
-        mini: true,
-        child: Icon(
-          Icons.find_replace,
+              onPressed: () {
+                try {
+                  context.findAncestorStateOfType<MyAppState>().setState(() {
+                    context.findAncestorStateOfType<MyAppState>().primaryColor =
+                        Utils.instance.randomColor();
+                    print("HERE");
+                  });
+                } catch (e) {
+                  print(e);
+                }
+              },
+            )
+          ],
+          // backgroundColor: Theme.of(context).primaryColor,
+          // centerTitle: false,
         ),
-      ),
-    );
+        body: Container(
+          child: ListView(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 15),
+                padding: EdgeInsets.only(left: 15),
+
+                // color: Colors.red,
+                child: Row(
+                  children: [
+                    Image.memory(
+                      widget.app.icon,
+                      width: 100,
+                      fit: BoxFit.fill,
+                    ),
+                  ],
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Name",
+                ),
+                subtitle: Text(
+                  widget.app.appName,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Package",
+                ),
+                subtitle: Text(
+                  widget.app.packageName,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Data Directory",
+                ),
+                subtitle: Text(
+                  widget.app.dataDir,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Version",
+                ),
+                subtitle: Text(
+                  widget.app.versionName,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Unity",
+                ),
+                subtitle: Text(
+                  widget.isUnity == null ? "Not an Unity app" : widget.isUnity,
+                ),
+              ),
+              widget.isUnity == null || widget.unityTech == null
+                  ? Container()
+                  : ListTile(
+                      title: Text(
+                        "Unity Tecnology",
+                      ),
+                      subtitle: Text(widget.unityTech),
+                    ),
+            ],
+          ),
+        ));
   }
 }
