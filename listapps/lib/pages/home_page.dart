@@ -190,7 +190,7 @@ class _HomePageState extends State<HomePage> {
                   ? Container()
                   : ListTile(
                       title: Text(
-                        "Unity Tecnology",
+                        "Unity Technology",
                       ),
                       subtitle: Text(widget.unityTech),
                     ),

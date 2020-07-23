@@ -15,7 +15,9 @@ class UserForm extends StatefulWidget {
 
 class _UserFormState extends State<UserForm> {
   void _loadUser(User user) {
-    if (user == null) return;
+    if (user == null) {
+      return;
+    }
     widget._formData['name'] = user.name;
     widget._formData['id'] = user.id;
     widget._formData['email'] = user.email;

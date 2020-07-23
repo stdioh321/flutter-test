@@ -1,14 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:listapps/pages/home_page.dart';
 import 'package:listapps/pages/list_apps.dart';
+import 'package:listapps/pages/test.dart';
 import 'package:listapps/services/utils.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:background_fetch/background_fetch.dart';
+
+/// This "Headless Task" is run when app is terminated.
+void backgroundFetchHeadlessTask(String taskId) async {
+  print('[BackgroundFetch] Headless event received.');
+  BackgroundFetch.finish(taskId);
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Utils.instance.prefs = await SharedPreferences.getInstance();
 
   runApp(MyApp());
+  BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
 }
 
 class MyApp extends StatefulWidget {
@@ -43,10 +52,11 @@ class MyAppState extends State<MyApp> {
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       // home: HomePage(),
-      initialRoute: "/",
+      initialRoute: "/test",
       routes: {
         "/": (context) => ListApps(),
         "/home": (context) => HomePage(),
+        "/test": (context) => TestPage(),
       },
     );
   }

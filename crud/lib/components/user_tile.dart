@@ -8,17 +8,16 @@ class UserTile extends StatelessWidget {
   UserTile({this.user, this.onDelete});
   @override
   Widget build(BuildContext context) {
-    final avatar = user.avatarUrl == null || user.avatarUrl.isEmpty
+    final avatar = user.avatarUrl != null
         ? CircleAvatar(
-            child: Icon(
-              Icons.person,
-            ),
-          )
-        : CircleAvatar(
             backgroundImage: NetworkImage(
               user.avatarUrl,
             ),
-          );
+          )
+        : CircleAvatar(
+            child: Icon(
+            Icons.person,
+          ));
     return ListTile(
       dense: true,
       leading: avatar,
