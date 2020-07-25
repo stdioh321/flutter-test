@@ -21,11 +21,12 @@ class MyApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.red,
             primaryColor: Colors.red,
-            brightness: Brightness.dark,
+            brightness: Brightness.light,
           ),
           // home: UserList(),
           routes: {
             AppRoutes.HOME: (context) => UserList(),
+            
             AppRoutes.USER_FORM: (context) => UserForm(),
           }),
     );

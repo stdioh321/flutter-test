@@ -1,9 +1,12 @@
-import 'dart:js_util';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:crud/models/user.dart';
 import 'package:crud/provider/users.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:file/file.dart';
+import 'package:file_picker/file_picker.dart';
 
 class UserForm extends StatefulWidget {
   final _form = GlobalKey<FormState>();
@@ -14,6 +17,8 @@ class UserForm extends StatefulWidget {
 }
 
 class _UserFormState extends State<UserForm> {
+  String dropdownValue;
+  User user;
   void _loadUser(User user) {
     if (user == null) {
       return;
@@ -25,9 +30,15 @@ class _UserFormState extends State<UserForm> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    User user = ModalRoute.of(context).settings.arguments;
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+    user = ModalRoute.of(context).settings.arguments;
     _loadUser(user);
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: user != null
@@ -47,12 +58,13 @@ class _UserFormState extends State<UserForm> {
               bool isValid = widget._form.currentState.validate();
               if (isValid) {
                 widget._form.currentState.save();
+                var tmpAvatar;
+
                 User u = User(
-                  id: widget._formData['id'],
-                  name: widget._formData['name'],
-                  email: widget._formData['email'],
-                  avatarUrl: widget._formData['url'],
-                );
+                    id: widget._formData['id'],
+                    name: widget._formData['name'],
+                    email: widget._formData['email'],
+                    avatarUrl: widget._formData['url']);
                 Users users = Provider.of(context, listen: false);
                 users.put(u);
                 Navigator.pop(context);
@@ -70,41 +82,43 @@ class _UserFormState extends State<UserForm> {
         ),
         child: Form(
           key: widget._form,
-          child: Column(
-            children: [
-              TextFormField(
-                initialValue: widget._formData['name'],
-                decoration: InputDecoration(
-                  labelText: "Nome",
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  initialValue: widget._formData['name'],
+                  decoration: InputDecoration(
+                    labelText: "Nome",
+                  ),
+                  onSaved: (v) => widget._formData['name'] = v,
+                  validator: (String v) {
+                    if (v == null || v.trim().isEmpty)
+                      return "Necessario algum valor.";
+                  },
+                  // onChanged: (value) {
+                  //   .
+                  // },
                 ),
-                onSaved: (v) => widget._formData['name'] = v,
-                validator: (String v) {
-                  if (v == null || v.trim().isEmpty)
-                    return "Necessario algum valor.";
-                },
-                // onChanged: (value) {
-                //   .
-                // },
-              ),
-              TextFormField(
-                initialValue: widget._formData['email'],
-                decoration: InputDecoration(
-                  labelText: "Email",
+                TextFormField(
+                  initialValue: widget._formData['email'],
+                  decoration: InputDecoration(
+                    labelText: "Email",
+                  ),
+                  onSaved: (v) => widget._formData['email'] = v,
+                  validator: (String v) {
+                    if (v == null || v.trim().isEmpty)
+                      return "Necessario algum valor.";
+                  },
                 ),
-                onSaved: (v) => widget._formData['email'] = v,
-                validator: (String v) {
-                  if (v == null || v.trim().isEmpty)
-                    return "Necessario algum valor.";
-                },
-              ),
-              TextFormField(
-                initialValue: widget._formData['url'],
-                decoration: InputDecoration(
-                  labelText: "URL Avatar",
+                TextFormField(
+                  initialValue: widget._formData['url'],
+                  decoration: InputDecoration(
+                    labelText: "URL Avatar",
+                  ),
+                  onSaved: (v) => widget._formData['url'] = v,
                 ),
-                onSaved: (v) => widget._formData['url'] = v,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

@@ -1,5 +1,6 @@
 import 'package:background_fetch/background_fetch.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TestPage extends StatefulWidget {
   @override
@@ -10,11 +11,18 @@ class _MyAppState extends State<TestPage> {
   bool _enabled = true;
   int _status = 0;
   List<DateTime> _events = [];
-
+  List list = [];
   @override
   void initState() {
     super.initState();
     initPlatformState();
+    SharedPreferences.getInstance().then((value) {
+      list = value.getStringList("list_db");
+      if (list == null) list = [];
+      setState(() {
+        list = [...list];
+      });
+    });
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -24,7 +32,7 @@ class _MyAppState extends State<TestPage> {
         BackgroundFetchConfig(
             minimumFetchInterval: 1,
             stopOnTerminate: false,
-            enableHeadless: false,
+            enableHeadless: true,
             requiresBatteryNotLow: false,
             requiresCharging: false,
             requiresStorageNotLow: false,
@@ -92,7 +100,7 @@ class _MyAppState extends State<TestPage> {
     return new MaterialApp(
       home: new Scaffold(
         appBar: new AppBar(
-            title: const Text('BackgroundFetch Example',
+            title: Text('BackgroundFetch Example: ${list.length}',
                 style: TextStyle(color: Colors.black)),
             backgroundColor: Colors.amberAccent,
             brightness: Brightness.light,

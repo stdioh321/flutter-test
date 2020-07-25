@@ -42,4 +42,25 @@ class Utils {
     return colorsList[
         Random(DateTime.now().millisecond).nextInt(colorsList.length)];
   }
+
+  void displayDialog({BuildContext ctx, String title, String content}) {
+    showDialog(
+      context: ctx,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            FlatButton(
+              child: Text("OK"),
+              color: Colors.red,
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            )
+          ],
+        );
+      },
+    );
+  }
 }

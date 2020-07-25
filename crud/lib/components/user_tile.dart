@@ -1,6 +1,9 @@
 import 'package:crud/models/user.dart';
 import 'package:crud/routes/app_routes.dart';
+import 'package:crud/views/user_form.dart';
+import 'package:crud/views/utils.dart';
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class UserTile extends StatelessWidget {
   User user;
@@ -8,19 +11,33 @@ class UserTile extends StatelessWidget {
   UserTile({this.user, this.onDelete});
   @override
   Widget build(BuildContext context) {
-    final avatar = user.avatarUrl != null
-        ? CircleAvatar(
-            backgroundImage: NetworkImage(
-              user.avatarUrl,
-            ),
-          )
-        : CircleAvatar(
-            child: Icon(
-            Icons.person,
-          ));
+    final avatar = CachedNetworkImage(
+      imageUrl: user.avatarUrl != null ? user.avatarUrl : 'unknow',
+      fit: BoxFit.contain,
+      imageBuilder: (context, imageProvider) {
+        // print(imageProvider.runtimeType);
+        return CircleAvatar(
+          backgroundImage: imageProvider,
+        );
+      },
+      placeholder: (context, url) {
+        return CircularProgressIndicator();
+      },
+      errorWidget: (context, url, error) {
+        return CircleAvatar(
+            backgroundImage: AssetImage(
+          'assets/images/avatar_placeholder.png',
+        ));
+      },
+    );
+
     return ListTile(
       dense: true,
-      leading: avatar,
+      leading: Container(
+        width: 50,
+        height: 50,
+        child: avatar,
+      ),
       title: Text(
         user.name,
       ),
@@ -33,10 +50,16 @@ class UserTile extends StatelessWidget {
           children: [
             IconButton(
               onPressed: () {
-                Navigator.of(context).pushNamed(
-                  AppRoutes.USER_FORM,
-                  arguments: user,
-                );
+                Navigator.push(
+                    context,
+                    Utils.instance.createRoute(
+                      page: UserForm(),
+                      arguments: user,
+                    ));
+                // Navigator.of(context).pushNamed(
+                //   AppRoutes.USER_FORM,
+                //   arguments: user,
+                // );
               },
               icon: Icon(
                 Icons.edit,

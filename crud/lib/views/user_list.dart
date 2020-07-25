@@ -4,6 +4,7 @@ import 'package:crud/models/user.dart';
 import 'package:crud/provider/users.dart';
 import 'package:crud/routes/app_routes.dart';
 import 'package:crud/views/user_form.dart';
+import 'package:crud/views/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,7 @@ class _UserListState extends State<UserList> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // setState(() {
+    // setState() {
     //   updateUsers();
     // });
   }
@@ -28,6 +29,22 @@ class _UserListState extends State<UserList> {
   // void updateUsers() {
   //   _users = Users().all;
   //   users = [..._users];
+  // }
+  // Route _createRoute({Widget page, Object arguments}) {
+  //   return PageRouteBuilder(
+  //     pageBuilder: (context, animation, secondaryAnimation) => page,
+  //     settings: RouteSettings(arguments: arguments),
+  //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+  //       var begin = Offset(1.0, 0.0);
+  //       var end = Offset.zero;
+  //       var tween = Tween(begin: begin, end: end);
+  //       var offsetAnimation = animation.drive(tween);
+  //       return SlideTransition(
+  //         position: offsetAnimation,
+  //         child: child,
+  //       );
+  //     },
+  //   );
   // }
 
   @override
@@ -46,9 +63,8 @@ class _UserListState extends State<UserList> {
               onPressed: () {
                 // Navigator.of(context)
                 //     .push(MaterialPageRoute(builder: (context) => UserForm()));
-                Navigator.of(context).pushNamed(
-                  AppRoutes.USER_FORM,
-                );
+                Navigator.of(context)
+                    .push(Utils.instance.createRoute(page: UserForm()));
 
                 // users.remove(users.byIndex(0));
                 // users.put(User(
@@ -93,7 +109,22 @@ class _UserListState extends State<UserList> {
                     ],
                   ),
                 ).then((value) {
-                  if (value) users.remove(user);
+                  if (value == true) {
+                    users.remove(user);
+                    Scaffold.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        "${user.name} removed",
+                      ),
+                      duration: Duration(
+                        seconds: 5,
+                      ),
+                      action: SnackBarAction(
+                          label: "Undo",
+                          onPressed: () {
+                            users.put(user);
+                          }),
+                    ));
+                  }
                 });
                 // users.remove(user);
                 // users.remove(index);

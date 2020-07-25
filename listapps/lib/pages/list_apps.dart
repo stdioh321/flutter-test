@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:device_apps/device_apps.dart';
 import 'package:flutter/material.dart';
 import 'package:listapps/pages/home_page.dart';
+import 'package:listapps/services/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:share_extend/share_extend.dart';
 import 'package:simple_search_bar/simple_search_bar.dart';
 
 class ListApps extends StatefulWidget {
@@ -12,34 +16,63 @@ class ListApps extends StatefulWidget {
 class _ListAppsState extends State<ListApps> {
   List<ApplicationWithIcon> _apps = [];
   List<ApplicationWithIcon> apps = [];
-  bool loading = false;
+  bool loading = true;
   AppBarController appBarController = AppBarController();
   int counter = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    this.getApps();
+    this.loadApps();
   }
 
-  void getApps() async {
+  void loadApps() async {
     var status = await Permission.storage.status;
     if (!status.isGranted) {
       await Permission.storage.request();
+    }
+    if ((await Permission.storage.status).isDenied ||
+        (await Permission.storage.status).isPermanentlyDenied) {
+      Utils.instance.displayDialog(
+        content: "It´s necessary to accept the permission",
+        title: "Warning",
+        ctx: context,
+      );
     }
     setState(() {
       this.loading = true;
       this.apps = [];
     });
     try {
-      List<ApplicationWithIcon> apps =
-          (await DeviceApps.getInstalledApplications(includeAppIcons: true))
-              .cast<ApplicationWithIcon>();
+      List<ApplicationWithIcon> tmpApps = [];
+      if (Utils.instance.prefs.containsKey('listApps')) {
+        List<String> listApps = Utils.instance.prefs.getStringList("listApps");
 
-      apps.sort((a, b) {
-        return a.appName.toLowerCase().compareTo(b.appName.toLowerCase());
-      });
-      this._apps = apps;
+        tmpApps = listApps.map((e) {
+          Map json = jsonDecode(
+            e,
+            reviver: (key, value) {
+              if (key == 'app_icon') {
+                return base64Encode((value as List)
+                    .map((e) => int.parse(e.toString()))
+                    .toList());
+              }
+              return value;
+            },
+          );
+          return Application(json) as ApplicationWithIcon;
+        }).toList();
+        storeGetApps().then((value) {
+          _apps = value;
+        });
+      } else {
+        tmpApps = await storeGetApps();
+      }
+      // tmpApps =
+      //     (await DeviceApps.getInstalledApplications(includeAppIcons: true))
+      //         .cast<ApplicationWithIcon>();
+
+      this._apps = tmpApps;
       setState(() {
         this.apps = this._apps.toList();
       });
@@ -52,6 +85,32 @@ class _ListAppsState extends State<ListApps> {
     setState(() {
       this.loading = false;
     });
+  }
+
+  Future<List<ApplicationWithIcon>> storeGetApps() async {
+    List<ApplicationWithIcon> tmpApps =
+        (await DeviceApps.getInstalledApplications(includeAppIcons: true))
+            .cast<ApplicationWithIcon>();
+    tmpApps.sort((a, b) {
+      return a.appName.toLowerCase().compareTo(b.appName.toLowerCase());
+    });
+    var tmpList = tmpApps.map((e) {
+      Map<String, dynamic> novoMap = Map<String, dynamic>();
+      novoMap['app_name'] = e.appName;
+      novoMap['apk_file_path'] = e.apkFilePath;
+      novoMap['package_name'] = e.packageName;
+      novoMap['version_name'] = e.versionName;
+      novoMap['version_code'] = e.versionCode;
+      novoMap['data_dir'] = e.dataDir;
+      novoMap['install_time'] = e.installTimeMillis;
+      novoMap['update_time'] = e.updateTimeMillis;
+      novoMap['system_app'] = e.systemApp;
+      novoMap['app_icon'] = e.icon;
+      return jsonEncode(novoMap);
+    }).toList();
+
+    await Utils.instance.prefs.setStringList("listApps", tmpList);
+    return tmpApps;
   }
 
   Widget buildBody() {
@@ -74,7 +133,7 @@ class _ListAppsState extends State<ListApps> {
             ),
             FlatButton(
               onPressed: () {
-                getApps();
+                loadApps();
               },
               color: Colors.red,
               // padding: EdgeInsets.all(15),
@@ -112,11 +171,28 @@ class _ListAppsState extends State<ListApps> {
           itemCount: apps.length,
           itemBuilder: (context, index) {
             ApplicationWithIcon app = apps[index];
+
             return ListTile(
               tileColor: index % 2 == 0 ? Colors.grey[100] : null,
               dense: true,
               // selected: true,
-              trailing: Icon(Icons.arrow_forward),
+              trailing: IconButton(
+                icon: Icon(Icons.share),
+                onPressed: () {
+                  try {
+                    ShareExtend.share(
+                      app.apkFilePath,
+                      "file",
+                      subject:
+                          "${app.appName}_${app.packageName}_v${app.versionName}.apk",
+                      extraText: "APK",
+                      sharePanelTitle: "Download the apk",
+                    );
+                  } catch (e) {
+                    print(e);
+                  }
+                },
+              ),
               onTap: () {
                 Navigator.push(
                   context,
