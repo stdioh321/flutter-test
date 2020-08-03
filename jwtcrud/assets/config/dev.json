@@ -1,0 +1,7 @@
+{
+    "host": "http://localhost:8000",
+    "urlApi": "http://localhost:8000/api/",
+    "rLogin": "login",
+    "rMe": "me",
+    "rItems": "item"
+}

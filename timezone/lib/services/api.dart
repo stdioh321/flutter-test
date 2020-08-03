@@ -7,8 +7,8 @@ class Api {
   Api._();
   static final Api instance = Api._();
 
-  String host = "http://worldtimeapi.org/";
-  String baseUrl = "http://worldtimeapi.org/api/";
+  String host = "https://worldtimeapi.org/";
+  String baseUrl = "https://worldtimeapi.org/api/";
 
   Future<List<String>> getTimezones() async {
     Response resp = await get("${baseUrl}timezone");

@@ -108,7 +108,7 @@ class _TimezoneDetailState extends State<TimezoneDetail> {
                 Text(
                   dt.toString().split('.')[0],
                   style: TextStyle(
-                    fontSize: 35, fontWeight: FontWeight.w900,
+                    fontSize: 30, fontWeight: FontWeight.w900,
                     // color: Colors.white,
                   ),
                 ),
