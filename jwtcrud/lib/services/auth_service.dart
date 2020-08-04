@@ -24,6 +24,26 @@ class AuthService {
     }
   }
 
+  bool isAuthenticate() {
+    try {
+      if (getUser() != null && getToken() != null) return true;
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  String getToken() {
+    try {
+      var token =
+          User.fromJson(jsonDecode(Utils.instance.prefs.getString('user')))
+              .token;
+      return token;
+    } catch (e) {
+      return null;
+    }
+  }
+
   User getUser() {
     try {
       var user =

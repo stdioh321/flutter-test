@@ -8,8 +8,9 @@ import 'package:jwtcrud/routes/app_routes.dart';
 import 'package:jwtcrud/services/app_config.dart';
 import 'package:jwtcrud/services/auth_service.dart';
 import 'package:jwtcrud/services/utils.dart';
-import 'package:jwtcrud/views/item_detail.dart';
-import 'package:jwtcrud/views/items_list.dart';
+import 'package:jwtcrud/views/items/item_detail.dart';
+import 'package:jwtcrud/views/items/items.dart';
+
 import 'package:jwtcrud/views/login_view.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -25,51 +26,20 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  bool isAuthenticated() {
-    if (AuthService.instance.getUser() != null) return true;
-    return false;
-  }
-
-  logout() {
-    AuthService.instance.setUser(null);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => AuthProvider(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ItemsProvider(),
-        ),
-      ],
-      child: MaterialApp(
-        title: 'JWT Crud',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          primarySwatch: Colors.green,
-          primaryColor: Colors.green,
-          visualDensity: VisualDensity.adaptivePlatformDensity,
-          buttonColor: Colors.orange,
-        ),
-        initialRoute: AppRoutes.LOGIN,
-        navigatorKey: Modular.navigatorKey,
-        onGenerateRoute: Modular.generateRoute,
-        // routes: {
-        //   AppRoutes.LOGIN: (_) {
-        //     return LoginView();
-        //   },
-        //   AppRoutes.ITEMS_LIST: (_) {
-        //     return ItemsList();
-        //   },
-        //   AppRoutes.ITEM_DETAIL: (_) {
-        //     return ItemDetail();
-        //   },
-        // },
+    return MaterialApp(
+      title: 'JWT Crud',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.teal,
+        primaryColor: Colors.teal,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+        buttonColor: Colors.teal,
       ),
+      initialRoute: AppRoutes.LOGIN,
+      navigatorKey: Modular.navigatorKey,
+      onGenerateRoute: Modular.generateRoute,
     );
   }
 }
@@ -77,7 +47,9 @@ class MyApp extends StatelessWidget {
 class AppModule extends MainModule {
   @override
   // TODO: implement binds
-  List<Bind> get binds => [];
+  List<Bind> get binds => [
+        Bind((_) => ItemsProvider()),
+      ];
 
   @override
   // TODO: implement bootstrap
@@ -91,46 +63,43 @@ class AppModule extends MainModule {
           child: (context, args) => LoginView(),
         ),
         Router(
-          AppRoutes.ITEMS_LIST,
-          child: (context, args) => ItemsList(),
-          guards: [MyGuard()],
+          AppRoutes.ITEMS,
+          child: (context, args) => ItemsView(),
+          guards: [AuthGuard()],
+          // transition: TransitionType.rotate,
         ),
         Router(
-          AppRoutes.ITEM_DETAIL,
-          child: (context, args) => ItemDetail(),
-          guards: [MyGuard()],
+          "${AppRoutes.ITEM_DETAIL}/:id",
+          child: (context, args) => ItemDetailView(
+            id: args.params['id'],
+          ),
+          guards: [AuthGuard()],
+          // transition: TransitionType.scale,
+        ),
+        Router(
+          "${AppRoutes.ITEM_DETAIL}",
+          child: (context, args) => ItemDetailView(),
+          guards: [AuthGuard()],
+
+          // transition: TransitionType.scale,
         ),
       ];
 }
 
-class MyGuard implements RouteGuard {
+class AuthGuard implements RouteGuard {
   @override
   bool canActivate(String url) {
-    print("CHANGED URL: $url");
-    if (AuthService.instance.getUser() == null) {
-      // Future.delayed(Duration(seconds: 2), () {
-      //   if (Modular.to.canPop())
+    // print("CHANGED URL: $url");
+    if (!AuthService.instance.isAuthenticate()) {
+      print("!AuthService.instance.isAuthenticate()");
       Timer.run(() {
-        // if (Modular.to.canPop())
-        // Modular.to.pushReplacementNamed('/login');
-        Modular.to.pushNamedAndRemoveUntil("/login", ModalRoute.withName("/"));
-        // else
-        //   Modular.to.pushNamed('/login');
+        AuthService.instance.setUser(null).then((value) {
+          Modular.to.pushNamedAndRemoveUntil(
+              AppRoutes.LOGIN, ModalRoute.withName("/"));
+        });
       });
-      //   else
-      //     Modular.to.pushNamed("/login");
-      // });
-      // return false;
     }
     return true;
-
-    // if (url != '/admin') {
-    //   // Return `true` to allow access
-    //   return true;
-    // } else {
-    //   // Return `false` to disallow access
-    //   return false;
-    // }
   }
 
   @override

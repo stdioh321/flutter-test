@@ -3,5 +3,7 @@
     "urlApi": "http://localhost:8000/api/",
     "rLogin": "login",
     "rMe": "me",
-    "rItems": "item"
+    "rItems": "item",
+    "rBrands": "brand",
+    "rModels": "model"
 }
