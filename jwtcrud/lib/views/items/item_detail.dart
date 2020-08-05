@@ -124,8 +124,8 @@ class _ItemDetailViewState extends State<ItemDetailView> {
     setState(() {});
     try {
       Response resp = await Api.getInstance().postItem(_formData);
-      if (resp.statusCode == 200) {
-        Modular.to
+      if (resp.statusCode >= 200 && resp.statusCode <= 299) {
+        await Modular.to
             .pushNamedAndRemoveUntil(AppRoutes.ITEMS, ModalRoute.withName("/"));
         loadingSubmit = Loading.ok;
         setState(() {});
@@ -155,8 +155,8 @@ class _ItemDetailViewState extends State<ItemDetailView> {
     setState(() {});
     try {
       Response resp = await Api.getInstance().putItem("${item.id}", _formData);
-      if (resp.statusCode == 200) {
-        Modular.to
+      if (resp.statusCode >= 200 && resp.statusCode <= 299) {
+        await Modular.to
             .pushNamedAndRemoveUntil(AppRoutes.ITEMS, ModalRoute.withName("/"));
         loadingSubmit = Loading.ok;
         setState(() {});
@@ -321,7 +321,7 @@ class _ItemDetailViewState extends State<ItemDetailView> {
                   clearOnSubmit: false,
                   textSubmitted: (data) {
                     _formData['color'] = data;
-                    _onSubmit();
+                    // _onSubmit();
                   },
                   key: _keySimpleAutoComplete,
                   suggestions: [
@@ -335,11 +335,11 @@ class _ItemDetailViewState extends State<ItemDetailView> {
                 ),
                 loadingSubmit == Loading.loading
                     ? Container(
-                        alignment: Alignment.centerLeft,
+                        alignment: Alignment.center,
                         child: CircularProgressIndicator(),
                       )
                     : Container(
-                        alignment: Alignment.centerLeft,
+                        alignment: Alignment.center,
                         child: FlatButton.icon(
                           color: Theme.of(context).primaryColor,
                           onPressed: _onSubmit,
@@ -373,10 +373,20 @@ class _ItemDetailViewState extends State<ItemDetailView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.id == null ? "Add Item" : "Update Item"),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.save,
+            ),
+            // disabledColor: Colors.red,
+            onPressed: loading == Loading.loading ? null : _onSubmit,
+          )
+        ],
         leading: IconButton(
           icon: Icon(Icons.arrow_back_ios),
           onPressed: () {
             // if (Modular.to.canPop()) {
+            //   print("CanPop");
             //   Modular.to.pop();
             // } else
             Modular.to.pushNamedAndRemoveUntil(

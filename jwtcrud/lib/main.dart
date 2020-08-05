@@ -8,10 +8,15 @@ import 'package:jwtcrud/routes/app_routes.dart';
 import 'package:jwtcrud/services/app_config.dart';
 import 'package:jwtcrud/services/auth_service.dart';
 import 'package:jwtcrud/services/utils.dart';
+import 'package:jwtcrud/views/brands/brand_detail.dart';
+import 'package:jwtcrud/views/brands/brands.dart';
+import 'package:jwtcrud/views/home.dart';
 import 'package:jwtcrud/views/items/item_detail.dart';
 import 'package:jwtcrud/views/items/items.dart';
 
 import 'package:jwtcrud/views/login_view.dart';
+import 'package:jwtcrud/views/models/model_detail.dart';
+import 'package:jwtcrud/views/models/models.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -38,6 +43,36 @@ class MyApp extends StatelessWidget {
         buttonColor: Colors.teal,
       ),
       initialRoute: AppRoutes.LOGIN,
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute<void>(
+          settings: settings,
+          builder: (BuildContext context) => Scaffold(
+              body: Center(
+                  child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Page Not Found'),
+              FlatButton.icon(
+                  color: Colors.red,
+                  onPressed: () async {
+                    // await Modular.to.pushNamedAndRemoveUntil(
+                    //     AppRoutes.ITEMS, ModalRoute.withName("/"));
+                    await Modular.to.pushReplacementNamed(AppRoutes.LOGIN);
+                  },
+                  icon: Icon(
+                    Icons.keyboard_return,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    "Home",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ))
+            ],
+          ))),
+        );
+      },
       navigatorKey: Modular.navigatorKey,
       onGenerateRoute: Modular.generateRoute,
     );
@@ -63,6 +98,12 @@ class AppModule extends MainModule {
           child: (context, args) => LoginView(),
         ),
         Router(
+          AppRoutes.HOME,
+          child: (context, args) => HomeView(),
+          // guards: [AuthGuard()],
+          // transition: TransitionType.rotate,
+        ),
+        Router(
           AppRoutes.ITEMS,
           child: (context, args) => ItemsView(),
           guards: [AuthGuard()],
@@ -83,6 +124,46 @@ class AppModule extends MainModule {
 
           // transition: TransitionType.scale,
         ),
+        Router(
+          AppRoutes.BRANDS,
+          child: (context, args) => BrandsView(),
+          guards: [AuthGuard()],
+          // transition: TransitionType.rotate,
+        ),
+        Router(
+          AppRoutes.BRAND_DETAIL,
+          child: (context, args) => BrandDetailView(),
+          guards: [AuthGuard()],
+          // transition: TransitionType.rotate,
+        ),
+        Router(
+          "${AppRoutes.BRAND_DETAIL}/:id",
+          child: (context, args) => BrandDetailView(
+            id: args.params['id'],
+          ),
+          guards: [AuthGuard()],
+          // transition: TransitionType.rotate,
+        ),
+        Router(
+          AppRoutes.MODELS,
+          child: (context, args) => ModelsViews(),
+          guards: [AuthGuard()],
+          // transition: TransitionType.rotate,
+        ),
+        Router(
+          AppRoutes.MODEL_DETAIL,
+          child: (context, args) => ModelDetailView(),
+          guards: [AuthGuard()],
+          // transition: TransitionType.rotate,
+        ),
+        Router(
+          "${AppRoutes.MODEL_DETAIL}/:id",
+          child: (context, args) => ModelDetailView(
+            args.params['id'],
+          ),
+          guards: [AuthGuard()],
+          // transition: TransitionType.rotate,
+        ),
       ];
 }
 
@@ -98,6 +179,7 @@ class AuthGuard implements RouteGuard {
               AppRoutes.LOGIN, ModalRoute.withName("/"));
         });
       });
+      // return false;
     }
     return true;
   }

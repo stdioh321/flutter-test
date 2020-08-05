@@ -1,6 +1,11 @@
 {
-    "host": "http://localhost:8000",
-    "urlApi": "http://localhost:8000/api/",
+    "isTest": false,
+    "host": "https://laratmp-server.herokuapp.com/",
+    "urlApi": "https://laratmp-server.herokuapp.com/api/",
+    "hostTest": "http://localhost:8000",
+    "urlApiTest": "http://localhost:8000/api/",
+    "hostProd": "https://laratmp-server.herokuapp.com/",
+    "urlApiProd": "https://laratmp-server.herokuapp.com/api/",
     "rLogin": "login",
     "rMe": "me",
     "rItems": "item",

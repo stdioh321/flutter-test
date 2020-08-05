@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'package:jwtcrud/routes/app_routes.dart';
 import 'package:jwtcrud/services/api.dart';
 import 'package:jwtcrud/services/auth_service.dart';
 import 'package:jwtcrud/services/enums.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class LoginView extends StatefulWidget {
   @override
@@ -25,6 +27,27 @@ class _LoginViewState extends State<LoginView> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _handlePermissions();
+    _checkIsAuthenticate();
+  }
+
+  _checkIsAuthenticate() async {
+    if (AuthService.instance.isAuthenticate()) {
+      Timer.run(() async {
+        await Modular.to.pushReplacementNamed(AppRoutes.ITEMS);
+      });
+      // return true;
+    }
+    // return false;
+  }
+
+  _handlePermissions() async {
+    try {
+      var status = await Permission.storage.status;
+      if (status.isDenied) {
+        Permission.storage.request();
+      }
+    } catch (e) {}
   }
 
   @override
@@ -42,17 +65,17 @@ class _LoginViewState extends State<LoginView> {
       });
       try {
         _formKey.currentState.save();
-        // print(formData);
+
         Response resp = await Api.getInstance().postLogin(
             username: formData['username'], password: formData['password']);
-
+        print(formData);
         if (resp.statusCode == 200) {
           var tmp = jsonDecode(resp.body);
           var user = User.fromJson(tmp['user']);
           user.token = tmp['token'];
           await AuthService.instance.setUser(user);
           // print(AuthService.instance.getUser().email);
-          Modular.to.pushReplacementNamed(AppRoutes.ITEMS);
+          await Modular.to.pushReplacementNamed(AppRoutes.ITEMS);
           setState(() {
             loadingStatus = Loading.ok;
           });
@@ -132,7 +155,8 @@ class _LoginViewState extends State<LoginView> {
                     height: 20,
                   ),
                   Container(
-                    alignment: Alignment.center,
+                    alignment: Alignment.centerRight,
+                    padding: EdgeInsets.all(15),
                     child: loadingStatus == Loading.loading
                         ? CircularProgressIndicator()
                         : RaisedButton.icon(
@@ -145,7 +169,7 @@ class _LoginViewState extends State<LoginView> {
                             label: Text(
                               "Login",
                               style: TextStyle(
-                                fontSize: 26,
+                                // fontSize: 26,
                                 color: Colors.white,
                               ),
                             )),

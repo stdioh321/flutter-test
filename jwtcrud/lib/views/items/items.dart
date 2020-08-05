@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart';
+import 'package:jwtcrud/components/custom_drawer.dart';
 import 'package:jwtcrud/models/item.dart';
 import 'package:jwtcrud/providers/items_provider.dart';
 import 'package:jwtcrud/routes/app_routes.dart';
@@ -85,21 +86,23 @@ class _ItemsViewState extends State<ItemsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: CustomDrawer(),
       appBar: AppBar(
         title: Text("Items"),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.add_circle_outline),
-              onPressed: () {
-                Modular.to.pushNamed(AppRoutes.ITEM_DETAIL);
-              })
-        ],
+
         // automaticallyImplyLeading: false,
       ),
       body: Container(
         child: Center(
           child: _buildBody(),
         ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        mini: true,
+        child: Icon(Icons.add),
+        onPressed: () {
+          Modular.to.pushNamed(AppRoutes.ITEM_DETAIL);
+        },
       ),
     );
   }
