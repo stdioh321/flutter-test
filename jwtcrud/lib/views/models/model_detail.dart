@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart';
+import 'package:jwtcrud/components/error_message.dart';
 import 'package:jwtcrud/exceptions/custom_exception.dart';
 import 'package:jwtcrud/models/brand.dart';
 import 'package:jwtcrud/models/model.dart';
@@ -79,6 +81,7 @@ class _ModelDetailViewState extends State<ModelDetailView> {
   _onSubmit([String str]) async {
     if (_form.currentState.validate()) {
       try {
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
         if (loadingSubmit == Loading.loading) return;
         loadingSubmit = Loading.loading;
         errorMsgSubmit = null;
@@ -159,6 +162,14 @@ class _ModelDetailViewState extends State<ModelDetailView> {
                     _formData['id_brand'] = v;
                   });
                 }),
+            SizedBox(
+              height: 20,
+            ),
+            loadingSubmit == Loading.error
+                ? ErrorMessage(
+                    msgError: errorMsgSubmit,
+                  )
+                : Container(),
           ],
         ),
       );
@@ -180,9 +191,11 @@ class _ModelDetailViewState extends State<ModelDetailView> {
           },
         ),
       ),
-      body: Container(
-        padding: EdgeInsets.all(15),
-        child: _buildBody(),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.all(15),
+          child: _buildBody(),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _onSubmit,

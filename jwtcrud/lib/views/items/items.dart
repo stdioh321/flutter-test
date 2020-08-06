@@ -10,6 +10,8 @@ import 'package:jwtcrud/routes/app_routes.dart';
 import 'package:jwtcrud/services/api.dart';
 import 'package:jwtcrud/services/auth_service.dart';
 import 'package:jwtcrud/services/enums.dart';
+import 'package:jwtcrud/services/utils.dart';
+import 'package:load/load.dart';
 
 class ItemsView extends StatefulWidget {
   @override
@@ -25,11 +27,13 @@ class _ItemsViewState extends State<ItemsView> {
   }
 
   _loadData() async {
+    // showLoadingDialog();
     setState(() {
       loading = Loading.loading;
     });
     try {
       Response resp = await Api.getInstance().getItems();
+
       if (resp.statusCode == 200) {
         var itemsProv = Modular.get<ItemsProvider>();
         itemsProv.items = (jsonDecode(resp.body) as List)

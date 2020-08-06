@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart';
 import 'package:jwtcrud/components/error_message.dart';
@@ -75,6 +76,7 @@ class _BrandDetailState extends State<BrandDetailView> {
         errorMsg = null;
       });
       try {
+        SystemChannels.textInput.invokeMethod('TextInput.hide');
         Response resp =
             await Api.getInstance().puBrand(id: widget.id, data: _formData);
         if (resp.statusCode >= 200 && resp.statusCode <= 299) {

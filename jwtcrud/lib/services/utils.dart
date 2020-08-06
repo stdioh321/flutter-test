@@ -15,17 +15,19 @@ class Utils {
     return _instance;
   }
 
-  Future<bool> displayToast(String msg) {
+  Future<bool> displayToast(@required String msg,
+      [Color color = Colors.green, double fontSize = 20]) {
     return Fluttertoast.showToast(
-        msg: msg,
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM_RIGHT,
-        timeInSecForIosWeb: 3,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        webBgColor: "linear-gradient(to right, #F00, #F11)",
-        webShowClose: true,
-        fontSize: 20.0);
+      msg: msg,
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM_RIGHT,
+      timeInSecForIosWeb: 3,
+      backgroundColor: color,
+      textColor: Colors.white,
+      webBgColor: "linear-gradient(to right, #F00, #F11)",
+      webShowClose: true,
+      fontSize: fontSize,
+    );
   }
 
   ExceptionMessage HandleException(Exception e) {
@@ -46,5 +48,17 @@ class Utils {
   Color colorFromHex(String hexColor) {
     final hexCode = hexColor.replaceAll('#', '');
     return Color(int.parse('FF$hexCode', radix: 16));
+  }
+
+  bool isSet([List args = null]) {
+    try {
+      print("isSET");
+      return args.every((element) {
+        print(element);
+        return element != null;
+      });
+    } catch (e) {
+      return false;
+    }
   }
 }

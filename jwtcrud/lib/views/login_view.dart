@@ -123,6 +123,10 @@ class _LoginViewState extends State<LoginView> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
+                  Text("user: test    pass: stdioh"),
+                  SizedBox(
+                    height: 10,
+                  ),
                   TextFormField(
                     decoration: InputDecoration(
                       labelText: "Username",
@@ -155,24 +159,54 @@ class _LoginViewState extends State<LoginView> {
                     height: 20,
                   ),
                   Container(
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.all(15),
-                    child: loadingStatus == Loading.loading
-                        ? CircularProgressIndicator()
-                        : RaisedButton.icon(
-                            onPressed: _onSubmit,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Container(
+                          child: RaisedButton.icon(
+                            onPressed: () async {
+                              await Modular.to
+                                  .pushReplacementNamed(AppRoutes.REGISTER);
+                            },
+                            color: Colors.blue[900],
+                            padding: EdgeInsets.all(15),
                             icon: Icon(
-                              Icons.person,
+                              Icons.note_add,
                               color: Colors.white,
                             ),
-                            padding: EdgeInsets.all(15),
                             label: Text(
-                              "Login",
-                              style: TextStyle(
-                                // fontSize: 26,
-                                color: Colors.white,
-                              ),
-                            )),
+                              "Register",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Container(
+                          child: loadingStatus == Loading.loading
+                              ? Container(
+                                  child: CircularProgressIndicator(),
+                                  padding: EdgeInsets.only(right: 15),
+                                )
+                              : RaisedButton.icon(
+                                  onPressed: _onSubmit,
+                                  icon: Icon(
+                                    Icons.person,
+                                    color: Colors.white,
+                                  ),
+                                  padding: EdgeInsets.all(15),
+                                  label: Text(
+                                    "Login",
+                                    style: TextStyle(
+                                      // fontSize: 26,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: 20,

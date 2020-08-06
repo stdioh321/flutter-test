@@ -2,7 +2,7 @@
     "isTest": false,
     "host": "https://laratmp-server.herokuapp.com/",
     "urlApi": "https://laratmp-server.herokuapp.com/api/",
-    "hostTest": "http://localhost:8000",
+    "hostTest": "http://localhost:8000/",
     "urlApiTest": "http://localhost:8000/api/",
     "hostProd": "https://laratmp-server.herokuapp.com/",
     "urlApiProd": "https://laratmp-server.herokuapp.com/api/",
@@ -10,5 +10,8 @@
     "rMe": "me",
     "rItems": "item",
     "rBrands": "brand",
-    "rModels": "model"
+    "rModels": "model",
+    "rUserPut": "user-update",
+    "rUser": "user",
+    "avatars": "avatars/"
 }

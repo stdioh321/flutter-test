@@ -17,6 +17,8 @@ import 'package:jwtcrud/views/items/items.dart';
 import 'package:jwtcrud/views/login_view.dart';
 import 'package:jwtcrud/views/models/model_detail.dart';
 import 'package:jwtcrud/views/models/models.dart';
+import 'package:jwtcrud/views/profile_view.dart';
+import 'package:load/load.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,48 +35,61 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'JWT Crud',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-        primaryColor: Colors.teal,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-        buttonColor: Colors.teal,
-      ),
-      initialRoute: AppRoutes.LOGIN,
-      onUnknownRoute: (RouteSettings settings) {
-        return MaterialPageRoute<void>(
-          settings: settings,
-          builder: (BuildContext context) => Scaffold(
-              body: Center(
-                  child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Page Not Found'),
-              FlatButton.icon(
-                  color: Colors.red,
-                  onPressed: () async {
-                    // await Modular.to.pushNamedAndRemoveUntil(
-                    //     AppRoutes.ITEMS, ModalRoute.withName("/"));
-                    await Modular.to.pushReplacementNamed(AppRoutes.LOGIN);
-                  },
-                  icon: Icon(
-                    Icons.keyboard_return,
-                    color: Colors.white,
-                  ),
-                  label: Text(
-                    "Home",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ))
-            ],
-          ))),
+    return LoadingProvider(
+      loadingWidgetBuilder: (context, data) {
+        return Container(
+          color: Colors.grey[400].withAlpha(200),
+          child: Center(
+            child: Image.asset(
+              "assets/images/loading.gif",
+            ),
+          ),
         );
       },
-      navigatorKey: Modular.navigatorKey,
-      onGenerateRoute: Modular.generateRoute,
+      // loadingWidgetBuilder: ,
+      child: MaterialApp(
+        title: 'JWT Crud',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.teal,
+          primaryColor: Colors.teal,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+          buttonColor: Colors.teal,
+        ),
+        initialRoute: AppRoutes.ITEMS,
+        onUnknownRoute: (RouteSettings settings) {
+          return MaterialPageRoute<void>(
+            settings: settings,
+            builder: (BuildContext context) => Scaffold(
+                body: Center(
+                    child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Page Not Found'),
+                FlatButton.icon(
+                    color: Colors.red,
+                    onPressed: () async {
+                      // await Modular.to.pushNamedAndRemoveUntil(
+                      //     AppRoutes.ITEMS, ModalRoute.withName("/"));
+                      await Modular.to.pushReplacementNamed(AppRoutes.LOGIN);
+                    },
+                    icon: Icon(
+                      Icons.keyboard_return,
+                      color: Colors.white,
+                    ),
+                    label: Text(
+                      "Home",
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                    ))
+              ],
+            ))),
+          );
+        },
+        navigatorKey: Modular.navigatorKey,
+        onGenerateRoute: Modular.generateRoute,
+      ),
     );
   }
 }
@@ -101,6 +116,18 @@ class AppModule extends MainModule {
           AppRoutes.HOME,
           child: (context, args) => HomeView(),
           // guards: [AuthGuard()],
+          // transition: TransitionType.rotate,
+        ),
+        Router(
+          AppRoutes.REGISTER,
+          child: (context, args) => ProfileView(),
+          guards: [],
+          // transition: TransitionType.rotate,
+        ),
+        Router(
+          AppRoutes.PROFILE,
+          child: (context, args) => ProfileView(true),
+          guards: [AuthGuard()],
           // transition: TransitionType.rotate,
         ),
         Router(

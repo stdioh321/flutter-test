@@ -1,17 +1,13 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:http/http.dart';
-import 'package:http_interceptor/http_interceptor.dart';
 import 'package:jwtcrud/exceptions/custom_exception.dart';
-import 'package:jwtcrud/interceptors/common_interceptor.dart';
 import 'package:jwtcrud/routes/app_routes.dart';
 import 'package:jwtcrud/services/app_config.dart';
 import 'package:jwtcrud/services/auth_service.dart';
-import 'package:toast/toast.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
 
 class Api {
@@ -43,6 +39,29 @@ class Api {
   Future getMe() {
     String url = baseUrl + AppConfig.getInstance().config['rMe'];
     return getWithAuth(url);
+  }
+
+  Future<StreamedResponse> putUser(Map<String, dynamic> data,
+      [bool isPost = false]) {
+    String url;
+    if (isPost == true) {
+      url = baseUrl + AppConfig.getInstance().config['rUser'];
+    } else
+      url = baseUrl + AppConfig.getInstance().config['rUserPut'];
+
+    var mreq = MultipartRequest("POST", Uri.parse(url));
+    if (isPost == false)
+      mreq.headers.addAll(
+          {"Authorization": "Bearer " + AuthService.instance.getToken()});
+
+    if (data.containsKey("image") && data['image'] != null) {
+      mreq.files.add(MultipartFile.fromBytes("image", data['image'],
+          filename: data['image_name']));
+      data.remove("image");
+    }
+    Map<String, String> tmpData = {...data};
+    mreq.fields.addAll(tmpData);
+    return mreq.send();
   }
 
   Future<Response> getItems([String id = null]) {

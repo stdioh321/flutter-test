@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AppConfig {
@@ -15,17 +16,24 @@ class AppConfig {
     // print(getInstance().config['host']);
   }
 
-  static getInstance() {
+  static AppConfig getInstance() {
     if (_instance == null) _instance = AppConfig();
     return _instance;
   }
-  // AppConfig({this.config}) {}
-  // static AppConfig instance() {
-  //   if (_instance == null) {
-  //     var tmp = Map<String, dynamic>();
-  //     tmp['abc'] = Random(DateTime.now().millisecondsSinceEpoch).nextInt(1000);
-  //     _instance = AppConfig(config: tmp);
-  //   }
-  //   return _instance;
-  // }
+
+  String getHost() {
+    return config['isTest'] == true ? config['hostTest'] : config['host'];
+  }
+
+  String getUrlApi() {
+    return config['isTest'] == true ? config['urlApiTest'] : config['urlApi'];
+  }
+
+  String getConfigKey(@required String key) {
+    try {
+      return config[key];
+    } catch (e) {
+      return null;
+    }
+  }
 }

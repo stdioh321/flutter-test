@@ -14,6 +14,7 @@ import 'package:jwtcrud/routes/app_routes.dart';
 import 'package:jwtcrud/services/api.dart';
 import 'package:jwtcrud/services/auth_service.dart';
 import 'package:jwtcrud/services/enums.dart';
+import 'package:jwtcrud/services/utils.dart';
 
 class ItemDetailView extends StatefulWidget {
   String id;
@@ -44,6 +45,7 @@ class _ItemDetailViewState extends State<ItemDetailView> {
   @override
   void initState() {
     // TODO: implement initState
+
     super.initState();
     _loadData();
   }
@@ -123,6 +125,7 @@ class _ItemDetailViewState extends State<ItemDetailView> {
     loadingSubmit = Loading.loading;
     setState(() {});
     try {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       Response resp = await Api.getInstance().postItem(_formData);
       if (resp.statusCode >= 200 && resp.statusCode <= 299) {
         await Modular.to
@@ -154,6 +157,7 @@ class _ItemDetailViewState extends State<ItemDetailView> {
     loadingSubmit = Loading.loading;
     setState(() {});
     try {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
       Response resp = await Api.getInstance().putItem("${item.id}", _formData);
       if (resp.statusCode >= 200 && resp.statusCode <= 299) {
         await Modular.to
