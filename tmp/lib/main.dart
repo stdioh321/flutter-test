@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_unity_widget/flutter_unity_widget.dart';
+import 'package:qrcode_flutter/qrcode_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 
 void main() => runApp(MyApp());
 
@@ -8,149 +9,105 @@ class MyApp extends StatefulWidget {
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
-  static final GlobalKey<ScaffoldState> _scaffoldKey =
-      GlobalKey<ScaffoldState>();
-  UnityWidgetController _unityWidgetController;
-  double _sliderValue = 0.0;
+class _MyAppState extends State<MyApp> with TickerProviderStateMixin {
+  QRCaptureController _controller = QRCaptureController();
+
+  bool _isTorchOn = false;
+
+  String _captureText = '';
 
   @override
   void initState() {
     super.initState();
+
+    _controller.onCapture((data) {
+      print('$data');
+      setState(() {
+        _captureText = data;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        key: _scaffoldKey,
         appBar: AppBar(
-          title: const Text('Unity Flutter Demo'),
+          title: const Text('scan'),
+          actions: <Widget>[
+            FlatButton(
+              onPressed: () async {
+                PickedFile image =
+                    await ImagePicker().getImage(source: ImageSource.gallery);
+                var qrCodeResult =
+                    await QRCaptureController.getQrCodeByImagePath(image.path);
+                setState(() {
+                  _captureText = qrCodeResult.join('\n');
+                });
+              },
+              child: Text('photoAlbum', style: TextStyle(color: Colors.white)),
+            ),
+          ],
         ),
-        body: Card(
-          margin: const EdgeInsets.all(8),
-          clipBehavior: Clip.antiAlias,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
-          child: Stack(
-            children: <Widget>[
-              UnityWidget(
-                onUnityViewCreated: onUnityCreated,
-                isARScene: false,
-                onUnityMessage: onUnityMessage,
+        body: Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Container(
+              width: 300,
+              height: 300,
+              child: QRCaptureView(
+                controller: _controller,
               ),
-              Positioned(
-                bottom: 20,
-                left: 20,
-                right: 20,
-                child: Card(
-                  elevation: 10,
-                  child: Column(
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.only(top: 20),
-                        child: Text("Rotation speed:"),
-                      ),
-                      Slider(
-                        onChanged: (value) {
-                          setState(() {
-                            _sliderValue = value;
-                          });
-                          setRotationSpeed(value.toString());
-                        },
-                        value: _sliderValue,
-                        min: 0,
-                        max: 20,
-                      ),
-                    ],
-                  ),
-                ),
+            ),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: _buildToolBar(),
               ),
-            ],
-          ),
+            ),
+            Container(
+              child: Text('$_captureText'),
+            )
+          ],
         ),
       ),
     );
   }
 
-  // Communcation from Flutter to Unity
-  void setRotationSpeed(String speed) {
-    _unityWidgetController.postMessage(
-      'Cube',
-      'SetRotationSpeed',
-      speed,
+  Widget _buildToolBar() {
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        FlatButton(
+          onPressed: () {
+            _controller.pause();
+          },
+          child: Text('pause'),
+        ),
+        FlatButton(
+          onPressed: () {
+            if (_isTorchOn) {
+              _controller.torchMode = CaptureTorchMode.off;
+            } else {
+              _controller.torchMode = CaptureTorchMode.on;
+            }
+            _isTorchOn = !_isTorchOn;
+          },
+          child: Text('torch'),
+        ),
+        FlatButton(
+          onPressed: () {
+            _controller.resume();
+          },
+          child: Text('resume'),
+        ),
+      ],
     );
   }
-
-  // Communication from Unity to Flutter
-  void onUnityMessage(controller, message) {
-    print('Received message from unity: ${message.toString()}');
-  }
-
-  // Callback that connects the created controller to the unity controller
-  void onUnityCreated(controller) {
-    this._unityWidgetController = controller;
-  }
 }
-
-// import 'package:flutter/material.dart';
-
-// void main() {
-//   runApp(MyApp());
-// }
-
-// class MyApp extends StatefulWidget {
-//   // This widget is the root of your application.
-//   @override
-//   _MyAppState createState() => _MyAppState();
-// }
-
-// class _MyAppState extends State<MyApp> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp(
-//       title: 'Tmp',
-//       debugShowCheckedModeBanner: false,
-//       theme: ThemeData(
-//         primaryColor: Colors.red,
-//         primarySwatch: Colors.blue,
-//         visualDensity: VisualDensity.adaptivePlatformDensity,
-//       ),
-//       home: HomePage(title: 'Flutter TMP Home Page'),
-//     );
-//   }
-// }
-
-// class HomePage extends StatefulWidget {
-//   String title;
-//   HomePage({this.title});
-
-//   @override
-//   _HomePageState createState() => _HomePageState();
-// }
-
-// class _HomePageState extends State<HomePage> {
-//   int counter = 0;
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: Text(widget.title),
-//       ),
-//       body: Center(
-//         child: Text("Center"),
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () {
-//           setState(() {
-//             counter++;
-//           });
-//         },
-//         child: Icon(
-//           Icons.update,
-//         ),
-//       ),
-//     );
-//   }
-// }
