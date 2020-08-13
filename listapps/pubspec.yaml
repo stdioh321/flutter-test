@@ -36,6 +36,7 @@ dependencies:
   search_app_bar: ^1.0.2+2
   simple_search_bar: ^0.1.7
   share_extend: ^1.1.9
+  
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3

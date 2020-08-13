@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:qrcode_flutter/qrcode_flutter.dart';
 import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:vibration/vibration.dart';
 
 class ReadQrView extends StatefulWidget {
@@ -52,6 +53,35 @@ class _ReadQrViewState extends State<ReadQrView> {
     });
   }
 
+  Widget _checkUrl(String url) {
+    if (url == null)
+      SizedBox();
+    else {
+      var reg = RegExp(
+          r"^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$");
+      if (reg.hasMatch(url)) {
+        return InkWell(
+          child: Text(
+            url,
+            style: TextStyle(
+              color: Colors.blue,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+          onTap: () async {
+            if (await canLaunch(url)) {
+              await launch(url);
+            } else {
+              print('Could not launch $url');
+            }
+          },
+        );
+      } else {
+        return Text(url);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -76,12 +106,16 @@ class _ReadQrViewState extends State<ReadQrView> {
             Expanded(
               flex: 1,
               child: Container(
-                alignment: Alignment.center,
+                alignment: Alignment.topLeft,
                 child: SingleChildScrollView(
                   child: Container(
                     // height: 100,
                     // color: Colors.red,
-                    padding: EdgeInsets.only(left: 50, right: 50),
+
+                    padding: EdgeInsets.only(
+                      left: 55,
+                      top: 5,
+                    ),
                     decoration: BoxDecoration(
                       // color: Colors.red,
                       border: border == false
@@ -93,17 +127,11 @@ class _ReadQrViewState extends State<ReadQrView> {
                               ),
                             ),
                     ),
-                    alignment: Alignment.center,
+                    alignment: Alignment.topLeft,
                     child: txtQr == null
                         ? Text("")
-                        : InkWell(
-                            child: Text(
-                              txtQr,
-                              style: TextStyle(color: Colors.blue),
-                            ),
-                            onTap: () async {
-                              await Share.share(txtQr, subject: "Text");
-                            },
+                        : _checkUrl(
+                            txtQr,
                           ),
                   ),
                 ),
@@ -121,20 +149,6 @@ class _ReadQrViewState extends State<ReadQrView> {
             Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                // FloatingActionButton(
-                //   onPressed: () {
-                //     _captureController.pause();
-                //   },
-                //   mini: true,
-                //   child: Icon(Icons.pause),
-                // ),
-                // FloatingActionButton(
-                //   onPressed: () {
-                //     _captureController.resume();
-                //   },
-                //   mini: true,
-                //   child: Icon(Icons.play_arrow),
-                // ),
                 FloatingActionButton(
                   onPressed: () {
                     try {
@@ -156,17 +170,39 @@ class _ReadQrViewState extends State<ReadQrView> {
                 )
               ],
             ),
-            txtQr == null
-                ? SizedBox()
-                : FloatingActionButton(
-                    child: Icon(
-                      Icons.delete,
-                    ),
-                    mini: true,
-                    onPressed: () {
-                      txtQr = null;
-                      setState(() {});
-                    })
+            Container(
+              padding: EdgeInsets.only(top: 20),
+              child: Column(
+                children: [
+                  txtQr == null
+                      ? SizedBox()
+                      : FloatingActionButton(
+                          child: Icon(
+                            Icons.delete,
+                          ),
+                          mini: true,
+                          onPressed: () {
+                            txtQr = null;
+                            setState(() {});
+                          },
+                        ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  txtQr == null
+                      ? SizedBox()
+                      : FloatingActionButton(
+                          child: Icon(
+                            Icons.share,
+                          ),
+                          mini: true,
+                          onPressed: () async {
+                            await Share.share(txtQr, subject: "Text");
+                          },
+                        ),
+                ],
+              ),
+            )
           ],
         ),
       ),

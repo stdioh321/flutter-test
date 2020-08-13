@@ -64,6 +64,9 @@ class _WriteQrViewState extends State<WriteQrView> {
                   key: _globalKey,
                   child: QrImage(
                       backgroundColor: Colors.white,
+                      foregroundColor: _txt != null && _txt.length % 2 == 0
+                          ? Colors.black
+                          : Colors.blue,
                       data: _txt,
                       version: QrVersions.auto,
                       gapless: false,
@@ -92,6 +95,7 @@ class _WriteQrViewState extends State<WriteQrView> {
                     _txt = value;
                     setState(() {});
                   },
+                  maxLines: 5,
                   decoration: InputDecoration(
                     labelText: "Text",
                   ),
@@ -101,33 +105,37 @@ class _WriteQrViewState extends State<WriteQrView> {
           ],
         ),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.miniEndTop,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            RenderRepaintBoundary boundary =
-                _globalKey.currentContext.findRenderObject();
-            // print(boundary);
-            ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-            ByteData byteData =
-                await image.toByteData(format: ui.ImageByteFormat.png);
-            var pngBytes = byteData.buffer.asUint8List();
-            // var bs64 = base64Encode(pngBytes);
-            String dir = (await getTemporaryDirectory()).path;
-            print(dir);
-            File f = File("$dir/pic.png");
-            if (await f.exists()) {
-              await f.delete();
+      floatingActionButtonLocation: FloatingActionButtonLocation.endTop,
+      floatingActionButton: Container(
+        // padding: EdgeInsets.only(bottom: 10),
+        // margin: EdgeInsets.only(bottom: 100),
+        child: FloatingActionButton(
+          onPressed: () async {
+            try {
+              RenderRepaintBoundary boundary =
+                  _globalKey.currentContext.findRenderObject();
+              // print(boundary);
+              ui.Image image = await boundary.toImage(pixelRatio: 3.0);
+              ByteData byteData =
+                  await image.toByteData(format: ui.ImageByteFormat.png);
+              var pngBytes = byteData.buffer.asUint8List();
+              // var bs64 = base64Encode(pngBytes);
+              String dir = (await getTemporaryDirectory()).path;
+              print(dir);
+              File f = File("$dir/pic.png");
+              if (await f.exists()) {
+                await f.delete();
+              }
+              await f.writeAsBytes(pngBytes);
+              await ShareExtend.share(f.path, "image");
+            } catch (e) {
+              print(e);
             }
-            await f.writeAsBytes(pngBytes);
-            await ShareExtend.share(f.path, "image");
-          } catch (e) {
-            print(e);
-          }
-        },
-        mini: true,
-        child: Icon(
-          Icons.share,
+          },
+          mini: true,
+          child: Icon(
+            Icons.share,
+          ),
         ),
       ),
     );
