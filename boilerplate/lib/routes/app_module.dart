@@ -1,19 +1,26 @@
 // app_module.dart
 import 'package:boilerplate/main.dart';
+import 'package:boilerplate/providers/todo_provider.dart';
 import 'package:boilerplate/routes/routes.dart';
 import 'package:boilerplate/views/home_view.dart';
+import 'package:boilerplate/views/img_upload.dart';
+import 'package:boilerplate/views/list_files.dart';
 import 'package:boilerplate/views/list_inifinity_view.dart';
 import 'package:boilerplate/views/list_items_view.dart';
 import 'package:boilerplate/views/login_google.dart';
 import 'package:boilerplate/views/push_notificaiton_view.dart';
 import 'package:boilerplate/views/search_view.dart';
+import 'package:boilerplate/views/tmp_view.dart';
+import 'package:boilerplate/views/todo_firebase.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
 class AppModule extends MainModule {
   // Provide a list of dependencies to inject into your project
   @override
-  List<Bind> get binds => [];
+  List<Bind> get binds => [
+        Bind((_) => TodoProvider()),
+      ];
 
   // Provide all the routes for your module
   @override
@@ -46,6 +53,26 @@ class AppModule extends MainModule {
         Router(
           Routes.PUSH_NOTIFICATION,
           child: (_, __) => PushNotificationView(),
+          guards: [AuthGuard()],
+        ),
+        Router(
+          Routes.TODO_FIREBASE,
+          child: (_, __) => TodoFirebaseView(),
+          guards: [AuthGuard()],
+        ),
+        Router(
+          Routes.TMP,
+          child: (_, __) => TmpView(),
+          guards: [AuthGuard()],
+        ),
+        Router(
+          Routes.LIST_FILES,
+          child: (_, __) => ListFilesView(),
+          guards: [AuthGuard()],
+        ),
+        Router(
+          Routes.IMG_UPLOAD,
+          child: (_, __) => ImgUploadView(),
           guards: [AuthGuard()],
         ),
       ];

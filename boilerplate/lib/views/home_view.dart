@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:boilerplate/components/custom_drawer.dart';
 import 'package:boilerplate/routes/routes.dart';
 import 'package:boilerplate/services/prefs.dart';
 import 'package:boilerplate/services/push_notification_manager.dart';
@@ -41,7 +42,7 @@ class _HomeViewState extends State<HomeView> {
             },
             size: const Size(240, 240),
             strokeWidth: 8,
-            thumbSize: 30,
+            thumbSize: 34,
           ),
           actions: <Widget>[
             // define os botões na base do dialogo
@@ -120,173 +121,6 @@ class _HomeViewState extends State<HomeView> {
               child: Icon(
                 Icons.color_lens,
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class CustomDrawer extends StatefulWidget {
-  const CustomDrawer({
-    Key key,
-    @required this.img,
-  }) : super(key: key);
-
-  final NetworkImage img;
-
-  @override
-  _CustomDrawerState createState() => _CustomDrawerState();
-}
-
-class _CustomDrawerState extends State<CustomDrawer> {
-  @override
-  Widget build(BuildContext context) {
-    // Utils.instance.removeFocus(context);
-    return Drawer(
-      child: Container(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              curve: Curves.bounceInOut,
-              child: Stack(
-                children: [
-                  Text(
-                    "Home",
-                    style: TextStyle(
-                      fontSize: 50,
-                      color: Colors.white,
-                      letterSpacing: 4,
-                    ),
-                  ),
-                  Text(
-                    "Home",
-                    style: TextStyle(
-                      fontSize: 50,
-                      letterSpacing: 4,
-                      // color: Colors.black.withAlpha(100),
-                      foreground: Paint()
-                        ..color = Colors.black
-                        ..style = PaintingStyle.stroke
-                        ..strokeWidth = 0.5,
-                    ),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  scale: 1,
-                  image: widget.img,
-                  fit: BoxFit.cover,
-                ),
-                color: Colors.white,
-              ),
-            ),
-            ListTile(
-              trailing: Icon(
-                Icons.arrow_forward,
-              ),
-              leading: Icon(Icons.library_books),
-              title: Text(
-                "List",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2,
-                  fontSize: 26,
-                ),
-              ),
-              onTap: () {
-                Modular.to.pushNamed(
-                  Routes.LIST,
-                );
-              },
-            ),
-            ListTile(
-              trailing: Icon(
-                Icons.arrow_forward,
-              ),
-              leading: Icon(Icons.library_books),
-              title: Text(
-                "List Infinity",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2,
-                  fontSize: 26,
-                ),
-              ),
-              onTap: () {
-                Modular.to.pushNamed(
-                  Routes.LIST_INFINITY,
-                );
-              },
-            ),
-            ListTile(
-              trailing: Icon(
-                Icons.arrow_forward,
-              ),
-              leading: Icon(Icons.library_books),
-              title: Text(
-                "Search",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2,
-                  fontSize: 26,
-                ),
-              ),
-              onTap: () {
-                Modular.to.pushNamed(
-                  Routes.SEARCH,
-                );
-              },
-            ),
-            ListTile(
-              trailing: Icon(
-                Icons.arrow_forward,
-              ),
-              leading: Icon(Icons.library_books),
-              title: Text(
-                "Login Google",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2,
-                  fontSize: 26,
-                ),
-              ),
-              onTap: () {
-                Modular.to.pushNamed(
-                  Routes.LOGIN_GOOGLE,
-                );
-              },
-            ),
-            ListTile(
-              trailing: Icon(
-                Icons.arrow_forward,
-              ),
-              leading: Icon(Icons.library_books),
-              title: Text(
-                "Push Notification",
-                style: TextStyle(
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 2,
-                  fontSize: 26,
-                ),
-              ),
-              onTap: () {
-                Modular.to.pushNamed(
-                  Routes.PUSH_NOTIFICATION,
-                );
-              },
-            ),
-            ListTile(
-              trailing: Icon(
-                Icons.arrow_back_ios,
-                color: Colors.red,
-              ),
-              onTap: () {
-                Navigator.pop(context);
-              },
             ),
           ],
         ),
