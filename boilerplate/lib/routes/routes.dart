@@ -6,6 +6,7 @@ class Routes {
   static String LOGIN_GOOGLE = "/login-google";
   static String PUSH_NOTIFICATION = "/push-notification";
   static String TODO_FIREBASE = "/todo-firebase";
+  static String TODO_FIREBASE_AUTH = "/todo-firebase-auth";
   static String TMP = "/tmp";
   static String LIST_FILES = "/list-files";
   static String IMG_UPLOAD = "/img-upload";

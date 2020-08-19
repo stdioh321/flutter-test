@@ -178,6 +178,25 @@ class _CustomDrawerState extends State<CustomDrawer> {
               ),
               leading: Icon(Icons.featured_play_list),
               title: Text(
+                "Todo Firebase Auth",
+                style: TextStyle(
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 2,
+                  fontSize: 26,
+                ),
+              ),
+              onTap: () {
+                Modular.to.pushNamed(
+                  Routes.TODO_FIREBASE_AUTH,
+                );
+              },
+            ),
+            ListTile(
+              trailing: Icon(
+                Icons.arrow_forward,
+              ),
+              leading: Icon(Icons.featured_play_list),
+              title: Text(
                 "TMP",
                 style: TextStyle(
                   fontWeight: FontWeight.w800,

@@ -12,6 +12,7 @@ import 'package:boilerplate/views/push_notificaiton_view.dart';
 import 'package:boilerplate/views/search_view.dart';
 import 'package:boilerplate/views/tmp_view.dart';
 import 'package:boilerplate/views/todo_firebase.dart';
+import 'package:boilerplate/views/todo_firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 
@@ -73,6 +74,11 @@ class AppModule extends MainModule {
         Router(
           Routes.IMG_UPLOAD,
           child: (_, __) => ImgUploadView(),
+          guards: [AuthGuard()],
+        ),
+        Router(
+          Routes.TODO_FIREBASE_AUTH,
+          child: (_, __) => TodoFirebaseAuthView(),
           guards: [AuthGuard()],
         ),
       ];
