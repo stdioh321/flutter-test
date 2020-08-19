@@ -173,7 +173,7 @@ class _ListAppsState extends State<ListApps> {
             ApplicationWithIcon app = apps[index];
 
             return ListTile(
-              tileColor: index % 2 == 0 ? Colors.grey[100] : null,
+              // tileColor: index % 2 == 0 ? Colors.grey[100] : null,
               dense: true,
               // selected: true,
               trailing: IconButton(
