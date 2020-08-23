@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Utils {
@@ -41,6 +42,15 @@ class Utils {
   MaterialColor randomColor() {
     return colorsList[
         Random(DateTime.now().millisecond).nextInt(colorsList.length)];
+  }
+
+  removeFocus(BuildContext context) {
+    try {
+      SystemChannels.textInput.invokeMethod('TextInput.hide');
+      FocusScope.of(context).requestFocus(FocusNode());
+    } catch (e) {
+      print(e);
+    }
   }
 
   void displayDialog({BuildContext ctx, String title, String content}) {

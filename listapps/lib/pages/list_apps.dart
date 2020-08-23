@@ -1,10 +1,15 @@
 import 'dart:convert';
 
 import 'package:device_apps/device_apps.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:listapps/pages/home_page.dart';
+import 'package:listapps/provider/admob.dart';
+import 'package:listapps/services/admob.dart';
 import 'package:listapps/services/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 import 'package:share_extend/share_extend.dart';
 import 'package:simple_search_bar/simple_search_bar.dart';
 
@@ -18,12 +23,39 @@ class _ListAppsState extends State<ListApps> {
   List<ApplicationWithIcon> apps = [];
   bool loading = true;
   AppBarController appBarController = AppBarController();
-  int counter = 0;
+  AdMobProvider adMob;
+  int countDisplayAd = 0;
+  GoogleSignIn _googleSignIn = GoogleSignIn();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    // FirebaseAdMob.instance
+    //     .initialize(appId: "ca-app-pub-9436128036799685~9366736514");
     this.loadApps();
+    // _handleAds();
+    // _loadAdBanner();
+  }
+
+  _handleSignIn() async {
+    try {
+      _handleSignOut();
+      var gAccount = await _googleSignIn.signIn();
+
+      Utils.instance
+          .displayDialog(ctx: context, content: gAccount.email, title: "");
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _handleSignOut() async {
+    try {
+      _googleSignIn.signOut();
+    } catch (e) {
+      print(e);
+    }
   }
 
   void loadApps() async {
@@ -116,9 +148,7 @@ class _ListAppsState extends State<ListApps> {
   Widget buildBody() {
     if (loading) {
       return Center(
-        child: Text(
-          "Loading",
-        ),
+        child: CircularProgressIndicator(),
       );
     } else if (this.apps == null) {
       return Center(
@@ -173,8 +203,7 @@ class _ListAppsState extends State<ListApps> {
             ApplicationWithIcon app = apps[index];
 
             return ListTile(
-              // tileColor: index % 2 == 0 ? Colors.grey[100] : null,
-              dense: true,
+              dense: false,
               // selected: true,
               trailing: IconButton(
                 icon: Icon(Icons.share),
@@ -193,14 +222,27 @@ class _ListAppsState extends State<ListApps> {
                   }
                 },
               ),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
+              onTap: () async {
+                try {
+                  Utils.instance.removeFocus(context);
+
+                  await Provider.of<AdMobProvider>(context, listen: false)
+                      .dispose();
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
                       builder: (BuildContext context) => HomePage(
-                            app: app,
-                          )),
-                );
+                        app: app,
+                      ),
+                    ),
+                  );
+                  countDisplayAd++;
+                  if (countDisplayAd >= 3) {
+                    countDisplayAd = 0;
+                    await adMob.initInterstitialAd();
+                  }
+                  await adMob.init();
+                } catch (e) {}
               },
               leading: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -261,9 +303,44 @@ class _ListAppsState extends State<ListApps> {
   }
 
   @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+
+    // print(adMob.isBannerOn);
+    // if (adMob.bannerAd == null) {
+    //   adMob.init();
+    // }
+  }
+
+  _handleAds() async {
+    // try {
+    //   AppAds.init();
+    //   AppAds.showBanner(
+    //       size: AdSize.smartBanner, anchorType: AnchorType.bottom);
+    // } catch (e) {
+    //   print(e);
+    // }
+  }
+
+  _loadAdMob() async {
+    if (adMob == null) {
+      adMob = Provider.of<AdMobProvider>(context);
+      adMob.init();
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    // print("build");
+    print("=============================================================");
+    print("build");
+    print("=============================================================");
+    _loadAdMob();
     return Scaffold(
+      bottomNavigationBar: Container(
+        height: adMob?.isBannerOn == true ? 100 : 0,
+        // child: Text("Anything"),
+      ),
       appBar: SearchAppBar(
         primary: Theme.of(context).primaryColor,
         appBarController: appBarController,
@@ -294,7 +371,36 @@ class _ListAppsState extends State<ListApps> {
           ],
         ),
       ),
-      body: buildBody(),
+      body: Column(
+        children: [
+          Expanded(
+            flex: 1,
+            child: buildBody(),
+          ),
+          // Container(
+          //   height: 100,
+          //   child: Text("Text"),
+          // ),
+        ],
+      ),
+      // persistentFooterButtons: [
+      //   Container(
+      //     height: 100,
+      //     child: Container(
+      //         // child: Text("sss"),
+      //         ),
+      //   ),
+      // ],
+      // extendBody: true,
+
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButton: FloatingActionButton(
+      //   // mini: true,
+      //   child: Icon(Icons.add_to_photos),
+      //   onPressed: () async {
+      //     _handleSignIn();
+      //   },
+      // ),
     );
   }
 }

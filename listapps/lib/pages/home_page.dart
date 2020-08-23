@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io' as io;
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive_io.dart';
@@ -110,20 +111,37 @@ class _HomePageState extends State<HomePage> {
           actions: [
             IconButton(
               icon: Icon(
-                Icons.color_lens,
+                Icons.play_circle_filled,
               ),
-              onPressed: () {
+              onPressed: () async {
+                bool canPlay = false;
                 try {
-                  context.findAncestorStateOfType<MyAppState>().setState(() {
-                    context.findAncestorStateOfType<MyAppState>().primaryColor =
-                        Utils.instance.randomColor();
-                    print("HERE");
-                  });
-                } catch (e) {
-                  print(e);
+                  canPlay = await DeviceApps.openApp(widget.app.packageName);
+                } catch (e) {}
+                if (canPlay == false) {
+                  Utils.instance.displayDialog(
+                      ctx: context,
+                      content: "😭 Unable to open the APP",
+                      title: "");
                 }
               },
-            )
+            ),
+            // IconButton(
+            //   icon: Icon(
+            //     Icons.color_lens,
+            //   ),
+            //   onPressed: () {
+            //     try {
+            //       context.findAncestorStateOfType<MyAppState>().setState(() {
+            //         context.findAncestorStateOfType<MyAppState>().primaryColor =
+            //             Utils.instance.randomColor();
+            //         print("HERE");
+            //       });
+            //     } catch (e) {
+            //       print(e);
+            //     }
+            //   },
+            // ),
           ],
           // backgroundColor: Theme.of(context).primaryColor,
           // centerTitle: false,
@@ -134,13 +152,13 @@ class _HomePageState extends State<HomePage> {
               Container(
                 margin: EdgeInsets.only(top: 15),
                 padding: EdgeInsets.only(left: 15),
-
                 // color: Colors.red,
                 child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Image.memory(
                       widget.app.icon,
-                      width: 100,
+                      width: 120,
                       fit: BoxFit.fill,
                     ),
                   ],
@@ -160,6 +178,24 @@ class _HomePageState extends State<HomePage> {
                 ),
                 subtitle: Text(
                   widget.app.packageName,
+                ),
+              ),
+              ListTile(
+                title: Text(
+                  "Size",
+                ),
+                subtitle: Text(
+                  (() {
+                    String result = "Unknow";
+                    try {
+                      var f = File(widget.app.apkFilePath);
+                      // throw Exception('ss');
+                      result =
+                          (f.lengthSync() / 1024 / 1024).toStringAsFixed(2) +
+                              "MB";
+                    } catch (e) {}
+                    return result;
+                  })(),
                 ),
               ),
               ListTile(

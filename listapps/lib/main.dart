@@ -1,10 +1,13 @@
 import 'dart:math';
 
+import 'package:animated_splash/animated_splash.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:listapps/pages/home_page.dart';
 import 'package:listapps/pages/list_apps.dart';
-import 'package:listapps/pages/test.dart';
+import 'package:listapps/provider/admob.dart';
 import 'package:listapps/services/utils.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:background_fetch/background_fetch.dart';
 
@@ -24,6 +27,7 @@ import 'package:background_fetch/background_fetch.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Provider.debugCheckInvalidValueType = null;
   Utils.instance.prefs = await SharedPreferences.getInstance();
 
   // await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
@@ -40,7 +44,7 @@ class MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<MyApp> {
-  MaterialColor primaryColor = Utils.instance.randomColor();
+  MaterialColor primaryColor = Colors.orange;
   Brightness brightness;
 
   @override
@@ -52,23 +56,32 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'List Apps',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: primaryColor,
-        brightness: brightness,
-        floatingActionButtonTheme: FloatingActionButtonThemeData(
-          backgroundColor: primaryColor,
-        ),
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      // home: HomePage(),
-      initialRoute: "/",
-      routes: {
-        "/": (context) => ListApps(),
-        "/home": (context) => HomePage(),
+    return ChangeNotifierProvider(
+      create: (context) {
+        return AdMobProvider();
       },
+      child: MaterialApp(
+        title: 'List Apps',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: primaryColor,
+          brightness: brightness,
+          floatingActionButtonTheme: FloatingActionButtonThemeData(
+            backgroundColor: primaryColor,
+          ),
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: AnimatedSplash(
+          home: ListApps(),
+          imagePath: "assets/images/splash.gif",
+          duration: 2,
+        ),
+        // initialRoute: "/",
+        // routes: {
+        //   // "/": (context) => ListApps(),
+        //   "/home": (context) => HomePage(),
+        // },
+      ),
     );
   }
 }
