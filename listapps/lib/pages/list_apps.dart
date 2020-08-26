@@ -2,11 +2,15 @@ import 'dart:convert';
 
 import 'package:device_apps/device_apps.dart';
 import 'package:firebase_admob/firebase_admob.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:listapps/pages/home_page.dart';
 import 'package:listapps/provider/admob.dart';
+import 'package:listapps/services/NotificationHelper.dart';
 import 'package:listapps/services/admob.dart';
+import 'package:listapps/main.dart';
 import 'package:listapps/services/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +40,7 @@ class _ListAppsState extends State<ListApps> {
     this.loadApps();
     // _handleAds();
     // _loadAdBanner();
+    // _handleLocalNotification();
   }
 
   _handleSignIn() async {
@@ -205,6 +210,9 @@ class _ListAppsState extends State<ListApps> {
             return ListTile(
               dense: false,
               // selected: true,
+              // enabled: true,
+
+              // isThreeLine: true,
               trailing: IconButton(
                 icon: Icon(Icons.share),
                 onPressed: () {
@@ -226,8 +234,7 @@ class _ListAppsState extends State<ListApps> {
                 try {
                   Utils.instance.removeFocus(context);
 
-                  await Provider.of<AdMobProvider>(context, listen: false)
-                      .dispose();
+                  adMob.disposeBannerAd();
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -239,9 +246,9 @@ class _ListAppsState extends State<ListApps> {
                   countDisplayAd++;
                   if (countDisplayAd >= 3) {
                     countDisplayAd = 0;
-                    await adMob.initInterstitialAd();
+                    await adMob.loadInterstitialAd();
                   }
-                  await adMob.init();
+                  await adMob.loadBannerAd();
                 } catch (e) {}
               },
               leading: Column(
@@ -306,7 +313,7 @@ class _ListAppsState extends State<ListApps> {
   void didChangeDependencies() {
     // TODO: implement didChangeDependencies
     super.didChangeDependencies();
-
+    _loadAdMob();
     // print(adMob.isBannerOn);
     // if (adMob.bannerAd == null) {
     //   adMob.init();
@@ -325,8 +332,9 @@ class _ListAppsState extends State<ListApps> {
 
   _loadAdMob() async {
     if (adMob == null) {
+      print("_loadAdMob");
       adMob = Provider.of<AdMobProvider>(context);
-      adMob.init();
+      adMob.loadBannerAd();
     }
   }
 
@@ -335,10 +343,10 @@ class _ListAppsState extends State<ListApps> {
     print("=============================================================");
     print("build");
     print("=============================================================");
-    _loadAdMob();
+
     return Scaffold(
       bottomNavigationBar: Container(
-        height: adMob?.isBannerOn == true ? 100 : 0,
+        height: adMob?.isBannerOn == true && adMob?.bannerAd != null ? 53 : 0,
         // child: Text("Anything"),
       ),
       appBar: SearchAppBar(
@@ -395,12 +403,19 @@ class _ListAppsState extends State<ListApps> {
 
       // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       // floatingActionButton: FloatingActionButton(
-      //   // mini: true,
-      //   child: Icon(Icons.add_to_photos),
+      //   mini: true,
+      //   child: Icon(Icons.timer),
       //   onPressed: () async {
-      //     _handleSignIn();
+      //     // NotificationHelper
+      //     LocalNotificationHandler.instance.scheduleNotification();
       //   },
       // ),
     );
+  }
+
+  showNotification() async {
+    // initializePlatformSpecifics();
+
+    LocalNotificationHandler.instance.showNotification();
   }
 }

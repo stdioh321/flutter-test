@@ -40,12 +40,14 @@ dependencies:
   load: ^0.1.6
   toast: ^0.1.5
   provider: ^4.3.2+1
+  flutter_local_notifications: ^1.4.4+4
+  rxdart: ^0.22.2
 
   # firebase_core: ^0.5.0
   # firebase_auth: ^0.18.0+1
   firebase_admob: ^0.9.3+4
   google_sign_in: ^4.5.1
-  ads: ^1.7.3
+  # ads: ^1.7.3
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

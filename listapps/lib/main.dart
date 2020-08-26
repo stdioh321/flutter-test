@@ -1,15 +1,12 @@
-import 'dart:math';
-
 import 'package:animated_splash/animated_splash.dart';
-import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
-import 'package:listapps/pages/home_page.dart';
+import 'package:flutter/services.dart';
 import 'package:listapps/pages/list_apps.dart';
 import 'package:listapps/provider/admob.dart';
+import 'package:listapps/services/NotificationHelper.dart';
 import 'package:listapps/services/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:background_fetch/background_fetch.dart';
 
 // /// This "Headless Task" is run when app is terminated.
 // void backgroundFetchHeadlessTask(String taskId) async {
@@ -29,9 +26,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Provider.debugCheckInvalidValueType = null;
   Utils.instance.prefs = await SharedPreferences.getInstance();
-
+  await SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   // await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-
+  LocalNotificationHandler.instance.init((String payload) {
+    print("Payload:::: ${payload}");
+  });
   runApp(MyApp());
 }
 
