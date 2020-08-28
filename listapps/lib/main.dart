@@ -7,6 +7,8 @@ import 'package:listapps/services/NotificationHelper.dart';
 import 'package:listapps/services/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wakelock/wakelock.dart';
+// import 'package:wakelock/wakelock.dart';
 
 // /// This "Headless Task" is run when app is terminated.
 // void backgroundFetchHeadlessTask(String taskId) async {
@@ -26,6 +28,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Provider.debugCheckInvalidValueType = null;
   Utils.instance.prefs = await SharedPreferences.getInstance();
+  Wakelock.enable();
+  // Wakelock.enable();
+
   await SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
   // await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);

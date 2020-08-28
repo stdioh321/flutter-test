@@ -26,15 +26,19 @@ class AdMobProvider with ChangeNotifier {
     );
   }
 
-  onBannerListen(MobileAdEvent event) {
-    if (event == MobileAdEvent.loaded) {
-      isBannerOn = true;
-    } else if (event == MobileAdEvent.failedToLoad) {
+  onBannerListen(event) {
+    try {
+      if (event == MobileAdEvent?.loaded) {
+        isBannerOn = true;
+      } else if (event == MobileAdEvent?.failedToLoad) {
+        isBannerOn = false;
+      }
+      print("=====================================================");
+      print("bannerAd MobileEvent ${event}");
+      print("=====================================================");
+    } catch (e) {
       isBannerOn = false;
     }
-    print("=====================================================");
-    print("bannerAd MobileEvent ${event}");
-    print("=====================================================");
     notifyListeners();
   }
 
