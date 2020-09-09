@@ -61,7 +61,7 @@ dependencies:
   flutter_downloader: ^1.5.0
   path_provider: ^1.6.11
   wakelock: ^0.1.4+2
-
+  
   # permission_handler: 4.4.0
 
 

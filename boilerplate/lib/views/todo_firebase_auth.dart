@@ -54,6 +54,14 @@ class _TodoFirebaseAuthViewState extends State<TodoFirebaseAuthView> {
       if (loading == true) return;
       loading = true;
       await GoogleAuth.instance.handleSignIn();
+      var cred = await GoogleAuth.instance.account.authentication;
+      var gProv = GoogleAuthProvider.getCredential(
+          idToken: cred.idToken, accessToken: cred.accessToken);
+      var tmp = await _auth.signInWithCredential(gProv);
+
+      //     token:
+      //         (await GoogleAuth.instance.account.authentication).accessToken);
+      print(tmp.user.email);
     } catch (e) {
       print(e);
     }
@@ -66,6 +74,7 @@ class _TodoFirebaseAuthViewState extends State<TodoFirebaseAuthView> {
       if (loading == true) return;
       loading = true;
       await GoogleAuth.instance.handleSignOut();
+      await _auth.signOut();
     } catch (e) {
       print(e);
     }

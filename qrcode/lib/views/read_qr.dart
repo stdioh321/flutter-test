@@ -113,7 +113,7 @@ class _ReadQrViewState extends State<ReadQrView> {
                     // color: Colors.red,
 
                     padding: EdgeInsets.only(
-                      left: 55,
+                      // left: 55,
                       top: 5,
                     ),
                     decoration: BoxDecoration(
@@ -147,25 +147,28 @@ class _ReadQrViewState extends State<ReadQrView> {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Column(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                FloatingActionButton(
-                  onPressed: () {
-                    try {
-                      if (_isTorch) {
-                        _captureController.torchMode = CaptureTorchMode.off;
-                        _isTorch = false;
-                      } else {
-                        _captureController.torchMode = CaptureTorchMode.on;
-                        _isTorch = true;
-                      }
-                      setState(() {});
-                    } catch (e) {}
-                  },
-                  mini: true,
-                  backgroundColor: _isTorch ? Colors.amber : null,
-                  child: Icon(
-                    Icons.lightbulb_outline,
+                Padding(
+                  padding: const EdgeInsets.only(top: 20),
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      try {
+                        if (_isTorch) {
+                          _captureController.torchMode = CaptureTorchMode.off;
+                          _isTorch = false;
+                        } else {
+                          _captureController.torchMode = CaptureTorchMode.on;
+                          _isTorch = true;
+                        }
+                        setState(() {});
+                      } catch (e) {}
+                    },
+                    mini: true,
+                    backgroundColor: _isTorch ? Colors.amber : null,
+                    child: Icon(
+                      Icons.lightbulb_outline,
+                    ),
                   ),
                 )
               ],

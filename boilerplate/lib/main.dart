@@ -8,11 +8,11 @@ import 'package:boilerplate/services/push_notification_manager.dart';
 import 'package:boilerplate/services/utils.dart';
 import 'package:boilerplate/views/list_items_view.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
+import 'package:flutter/material.dart' hide Router;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
