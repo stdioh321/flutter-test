@@ -14,70 +14,71 @@ import 'package:boilerplate/views/tmp_view.dart';
 import 'package:boilerplate/views/todo_firebase.dart';
 import 'package:boilerplate/views/todo_firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_modular/flutter_modular.dart' as modular;
-import 'package:flutter/material.dart' hide Router;
+import 'package:flutter_modular/flutter_modular.dart';
+// import 'package:flutter/material.dart' hide Router;
+import 'package:flutter/material.dart';
 
-class AppModule extends modular.MainModule {
+class AppModule extends MainModule {
   // Provide a list of dependencies to inject into your project
   @override
-  List<modular.Bind> get binds => [
-        modular.Bind((_) => TodoProvider()),
+  List<Bind> get binds => [
+        Bind((_) => TodoProvider()),
       ];
 
   // Provide all the routes for your module
   @override
-  List<modular.Router> get routers => [
-        modular.Router(
+  List<ModularRouter> get routers => [
+        ModularRouter(
           Routes.HOME,
           child: (_, __) => HomeView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.LIST,
           child: (_, __) => ListItemsView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.LIST_INFINITY,
           child: (_, __) => ListInfinityView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.SEARCH,
           child: (_, __) => SearchView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.LOGIN_GOOGLE,
           child: (_, __) => LoginGoogleView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.PUSH_NOTIFICATION,
           child: (_, __) => PushNotificationView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.TODO_FIREBASE,
           child: (_, __) => TodoFirebaseView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.TMP,
           child: (_, __) => TmpView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.LIST_FILES,
           child: (_, __) => ListFilesView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.IMG_UPLOAD,
           child: (_, __) => ImgUploadView(),
           guards: [AuthGuard()],
         ),
-        modular.Router(
+        ModularRouter(
           Routes.TODO_FIREBASE_AUTH,
           child: (_, __) => TodoFirebaseAuthView(),
           guards: [AuthGuard()],
@@ -89,7 +90,7 @@ class AppModule extends modular.MainModule {
   Widget get bootstrap => MyApp();
 }
 
-class AuthGuard extends modular.RouteGuard {
+class AuthGuard extends RouteGuard {
   @override
   bool canActivate(String url) {
     // TODO: implement canActivate
@@ -100,7 +101,7 @@ class AuthGuard extends modular.RouteGuard {
 
   @override
   // TODO: implement executors
-  List<modular.GuardExecutor> get executors => [GuardExec()];
+  List<GuardExecutor> get executors => [GuardExec()];
 
   // @override
   // TODO: implement executors
@@ -108,7 +109,7 @@ class AuthGuard extends modular.RouteGuard {
   // List<GuardExecutor> get executors => null;
 }
 
-class GuardExec extends modular.GuardExecutor {
+class GuardExec extends GuardExecutor {
   @override
   void onGuarded(String path, {bool isActive}) {
     // TODO: implement onGuarded

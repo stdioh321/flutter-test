@@ -1,16 +1,40 @@
-# jwtcrud
+# Jwtcrud
 
-A new Flutter project.
+Projects created with flutter and JWT
 
-## Getting Started
+# Requirements
+1. [Flutter](https://flutter.dev/docs/get-started/install)
+2. [Android Studio](https://developer.android.com/studio)
 
-This project is a starting point for a Flutter application.
+# Android Apk
+**https://github.com/stdioh321/flutter-test/releases**
 
-A few resources to get you started if this is your first Flutter project:
+# Setup
+```
+$ git clone https://github.com/stdioh321/flutter-test.git
+$ cd flutter-test/jwtcrud
+```
+# Run
+```
+$ flutter clean
+$ flutter pub get
+$ flutter run
+```
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Login|Register
+:-:|:-:
+![Login](docs/screenshots/screenshot_01.png) | ![Register](docs/screenshots/screenshot_02.png)
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Items|Add Item
+:-:|:-:
+![Items](docs/screenshots/screenshot_03.png) | ![Add Item](docs/screenshots/screenshot_04.png)
+
+Drawer|Profile
+:-:|:-:
+![Drawer](docs/screenshots/screenshot_05.png) | ![Profile](docs/screenshots/screenshot_06.png)
+
+
+# References
+- [Flutter](https://flutter.dev/)
+- [Dart/Flutter packages](https://pub.dev/)
+- [File Picker](https://pub.dev/packages/file_picker)

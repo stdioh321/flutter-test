@@ -107,36 +107,36 @@ class AppModule extends MainModule {
 
   @override
   // TODO: implement routers
-  List<Router> get routers => [
-        Router(
+  List<ModularRouter> get routers => [
+        ModularRouter(
           AppRoutes.LOGIN,
           child: (context, args) => LoginView(),
         ),
-        Router(
+        ModularRouter(
           AppRoutes.HOME,
           child: (context, args) => HomeView(),
           // guards: [AuthGuard()],
           // transition: TransitionType.rotate,
         ),
-        Router(
+        ModularRouter(
           AppRoutes.REGISTER,
           child: (context, args) => ProfileView(),
           guards: [],
           // transition: TransitionType.rotate,
         ),
-        Router(
+        ModularRouter(
           AppRoutes.PROFILE,
           child: (context, args) => ProfileView(true),
           guards: [AuthGuard()],
           // transition: TransitionType.rotate,
         ),
-        Router(
+        ModularRouter(
           AppRoutes.ITEMS,
           child: (context, args) => ItemsView(),
           guards: [AuthGuard()],
           // transition: TransitionType.rotate,
         ),
-        Router(
+        ModularRouter(
           "${AppRoutes.ITEM_DETAIL}/:id",
           child: (context, args) => ItemDetailView(
             id: args.params['id'],
@@ -144,26 +144,26 @@ class AppModule extends MainModule {
           guards: [AuthGuard()],
           // transition: TransitionType.scale,
         ),
-        Router(
+        ModularRouter(
           "${AppRoutes.ITEM_DETAIL}",
           child: (context, args) => ItemDetailView(),
           guards: [AuthGuard()],
 
           // transition: TransitionType.scale,
         ),
-        Router(
+        ModularRouter(
           AppRoutes.BRANDS,
           child: (context, args) => BrandsView(),
           guards: [AuthGuard()],
           // transition: TransitionType.rotate,
         ),
-        Router(
+        ModularRouter(
           AppRoutes.BRAND_DETAIL,
           child: (context, args) => BrandDetailView(),
           guards: [AuthGuard()],
           // transition: TransitionType.rotate,
         ),
-        Router(
+        ModularRouter(
           "${AppRoutes.BRAND_DETAIL}/:id",
           child: (context, args) => BrandDetailView(
             id: args.params['id'],
@@ -171,19 +171,19 @@ class AppModule extends MainModule {
           guards: [AuthGuard()],
           // transition: TransitionType.rotate,
         ),
-        Router(
+        ModularRouter(
           AppRoutes.MODELS,
           child: (context, args) => ModelsViews(),
           guards: [AuthGuard()],
           // transition: TransitionType.rotate,
         ),
-        Router(
+        ModularRouter(
           AppRoutes.MODEL_DETAIL,
           child: (context, args) => ModelDetailView(),
           guards: [AuthGuard()],
           // transition: TransitionType.rotate,
         ),
-        Router(
+        ModularRouter(
           "${AppRoutes.MODEL_DETAIL}/:id",
           child: (context, args) => ModelDetailView(
             args.params['id'],
