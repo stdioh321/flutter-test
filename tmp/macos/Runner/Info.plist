@@ -26,6 +26,8 @@
 	<string>$(PRODUCT_COPYRIGHT)</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>NSLocationAlwaysUsageDescription</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>
