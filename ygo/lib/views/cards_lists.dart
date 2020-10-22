@@ -454,12 +454,21 @@ class _CardsListState extends State<CardsList>
                     children: [
                       Container(
                         alignment: Alignment.center,
+                        // decoration: BoxDecoration(
+                        //     border: Border.all(
+                        //   color: Colors.red,
+                        //   width: 2,
+                        // )),
                         height: 20,
                         child: Text(
                           e.name,
+                          // maxLines: 2,
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
-                          style: TextStyle(fontSize: 10),
+                          style: TextStyle(
+                              fontSize: 10, fontWeight: FontWeight.bold
+                              // letterSpacing: 2,
+                              ),
                         ),
                       ),
                       SizedBox(

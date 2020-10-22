@@ -1,5 +1,5 @@
-name: ygo
-description: A new Flutter project.
+name: YgoCards
+description: Cards from yu-gi-oh card game
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
