@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ygo/routes/routes.dart';
+import 'package:ygo/services/prefs.dart';
 import 'package:ygo/views/card_details.dart';
 import 'package:ygo/views/cards_lists.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await _loadBeforeApp();
   runApp(MyApp());
+}
+
+_loadBeforeApp() async {
+  Prefs.instance.prefs = await SharedPreferences.getInstance();
 }
 
 class MyApp extends StatelessWidget {

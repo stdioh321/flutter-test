@@ -9,6 +9,7 @@ class CardModel {
   String _race;
   String _attribute;
   String _archetype;
+  BanlistInfo _banlistInfo;
   List<CardSets> _cardSets;
   List<CardImages> _cardImages;
   List<CardPrices> _cardPrices;
@@ -24,6 +25,7 @@ class CardModel {
       String race,
       String attribute,
       String archetype,
+      BanlistInfo banlistInfo,
       List<CardSets> cardSets,
       List<CardImages> cardImages,
       List<CardPrices> cardPrices}) {
@@ -37,6 +39,7 @@ class CardModel {
     this._race = race;
     this._attribute = attribute;
     this._archetype = archetype;
+    this._banlistInfo = banlistInfo;
     this._cardSets = cardSets;
     this._cardImages = cardImages;
     this._cardPrices = cardPrices;
@@ -62,6 +65,8 @@ class CardModel {
   set attribute(String attribute) => _attribute = attribute;
   String get archetype => _archetype;
   set archetype(String archetype) => _archetype = archetype;
+  BanlistInfo get banlistInfo => _banlistInfo;
+  set banlistInfo(BanlistInfo banlistInfo) => _banlistInfo = banlistInfo;
   List<CardSets> get cardSets => _cardSets;
   set cardSets(List<CardSets> cardSets) => _cardSets = cardSets;
   List<CardImages> get cardImages => _cardImages;
@@ -80,6 +85,9 @@ class CardModel {
     _race = json['race'];
     _attribute = json['attribute'];
     _archetype = json['archetype'];
+    _banlistInfo = json['banlist_info'] != null
+        ? new BanlistInfo.fromJson(json['banlist_info'])
+        : null;
     if (json['card_sets'] != null) {
       _cardSets = new List<CardSets>();
       json['card_sets'].forEach((v) {
@@ -112,6 +120,9 @@ class CardModel {
     data['race'] = this._race;
     data['attribute'] = this._attribute;
     data['archetype'] = this._archetype;
+    if (this._banlistInfo != null) {
+      data['banlist_info'] = this._banlistInfo.toJson();
+    }
     if (this._cardSets != null) {
       data['card_sets'] = this._cardSets.map((v) => v.toJson()).toList();
     }
@@ -121,6 +132,33 @@ class CardModel {
     if (this._cardPrices != null) {
       data['card_prices'] = this._cardPrices.map((v) => v.toJson()).toList();
     }
+    return data;
+  }
+}
+
+class BanlistInfo {
+  String _banTcg;
+  String _banOcg;
+
+  BanlistInfo({String banTcg, String banOcg}) {
+    this._banTcg = banTcg;
+    this._banOcg = banOcg;
+  }
+
+  String get banTcg => _banTcg;
+  set banTcg(String banTcg) => _banTcg = banTcg;
+  String get banOcg => _banOcg;
+  set banOcg(String banOcg) => _banOcg = banOcg;
+
+  BanlistInfo.fromJson(Map<String, dynamic> json) {
+    _banTcg = json['ban_tcg'];
+    _banOcg = json['ban_ocg'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ban_tcg'] = this._banTcg;
+    data['ban_ocg'] = this._banOcg;
     return data;
   }
 }

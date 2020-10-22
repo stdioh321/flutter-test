@@ -41,9 +41,14 @@ class _CardDetailsState extends State<CardDetails> {
                             ),
                           );
                         },
-                        child: FadeInImage.assetNetwork(
-                          image: widget.card.cardImages[0].imageUrl,
-                          placeholder: 'assets/images/card_placeholder.png',
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                              maxHeight:
+                                  MediaQuery.of(context).size.height / 2),
+                          child: FadeInImage.assetNetwork(
+                            image: widget.card.cardImages[0].imageUrl,
+                            placeholder: 'assets/images/card_placeholder.png',
+                          ),
                         ),
                       ),
                       // Image.network(
@@ -70,6 +75,10 @@ class _CardDetailsState extends State<CardDetails> {
                             ),
                             Text("Type: ${widget.card.type}"),
                             Text("Race: ${widget.card.race}"),
+
+                            widget.card.archetype == null
+                                ? SizedBox()
+                                : Text("Archtype: ${widget.card.archetype}"),
                             SizedBox(
                               height: 20,
                             ),
@@ -81,11 +90,26 @@ class _CardDetailsState extends State<CardDetails> {
                                 ? SizedBox()
                                 : Text("Def: ${widget.card.def}",
                                     style: TextStyle(fontSize: 20)),
-                            // Text("${widget.card}"),
-                            SizedBox(height: 20),
-                            widget.card.archetype == null
+                            widget.card.banlistInfo == null
                                 ? SizedBox()
-                                : Text("Archtype: ${widget.card.archetype}"),
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(height: 20),
+                                      Text("Banlist"),
+                                      widget.card.banlistInfo.banTcg == null
+                                          ? SizedBox()
+                                          : Text(
+                                              "TCG: ${widget.card.banlistInfo.banTcg}"),
+                                      widget.card.banlistInfo.banOcg == null
+                                          ? SizedBox()
+                                          : Text(
+                                              "OCG: ${widget.card.banlistInfo.banOcg}"),
+                                    ],
+                                  ),
+
+                            // Text("${widget.card}"),
                           ],
                         ),
                       ),

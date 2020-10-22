@@ -14,7 +14,12 @@ class Api {
     return _instance;
   }
 
-  Future<http.Response> getCards() {
-    return http.get(urlBase);
+  Future<http.Response> getCards({String lang: ""}) {
+    String tmpUrl = urlBase;
+
+    if (lang != null && lang.isNotEmpty == true && lang != "en") {
+      tmpUrl += "?language=" + lang;
+    }
+    return http.get(tmpUrl);
   }
 }
