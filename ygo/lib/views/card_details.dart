@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:ygo/generated/l10n.dart';
 import 'package:ygo/models/card_model.dart';
 
 class CardDetails extends StatefulWidget {
@@ -16,7 +17,17 @@ class _CardDetailsState extends State<CardDetails> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Card Detail"),
+        title: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            text: "${widget.card.name}",
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+              fontWeight: FontWeight.w900,
+            ),
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
@@ -28,76 +39,106 @@ class _CardDetailsState extends State<CardDetails> {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Expanded(
-                      flex: 5,
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) => CardViewer(
-                                url: widget.card.cardImages[0].imageUrl,
-                              ),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) => CardViewer(
+                              url: widget.card.cardImages[0].imageUrl,
                             ),
-                          );
-                        },
-                        child: ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxHeight:
-                                  MediaQuery.of(context).size.height / 2),
-                          child: FadeInImage.assetNetwork(
-                            image: widget.card.cardImages[0].imageUrl,
-                            placeholder: 'assets/images/card_placeholder.png',
                           ),
+                        );
+                      },
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxHeight: MediaQuery.of(context).size.height / 2,
+                            maxWidth:
+                                (MediaQuery.of(context).size.width / 2) - 20),
+                        child: FadeInImage.assetNetwork(
+                          image: widget.card.cardImages[0].imageUrl,
+                          placeholder: 'assets/images/card_placeholder.png',
                         ),
                       ),
-                      // Image.network(
-                      //   widget.card.cardImages[0].imageUrl,
-                      //   fit: BoxFit.contain,
-                      // ),
                     ),
                     Expanded(
-                      flex: 7,
+                      flex: 1,
                       child: Container(
-                        padding: EdgeInsets.only(left: 15),
+                        padding: EdgeInsets.only(left: 10),
                         child: Column(
                           // mainAxisAlignment: MainAxisAlignment.start,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Container(),
-                            Text(
-                              "${widget.card.name}",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900, fontSize: 20),
-                            ),
-                            SizedBox(
-                              height: 20,
-                            ),
-                            Text("Type: ${widget.card.type}"),
-                            Text("Race: ${widget.card.race}"),
-
+                            // Text(
+                            //   "${widget.card.name}",
+                            //   style: TextStyle(
+                            //       fontWeight: FontWeight.w900, fontSize: 17),
+                            // ),
+                            // Divider(
+                            //     // height: 20,
+                            //     ),
+                            Text("${S.of(context).type}: ${widget.card.type}"),
+                            Divider(),
+                            Text("${S.of(context).race}: ${widget.card.race}"),
+                            Divider(),
+                            widget.card.attribute == null
+                                ? SizedBox()
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${S.of(context).attribute}: ${widget.card.attribute}",
+                                      ),
+                                      Divider(),
+                                    ],
+                                  ),
+                            widget.card.level == null
+                                ? SizedBox()
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${S.of(context).level}/${S.of(context).rank}: ${widget.card.level}",
+                                      ),
+                                      Divider(),
+                                    ],
+                                  ),
                             widget.card.archetype == null
                                 ? SizedBox()
-                                : Text("Archtype: ${widget.card.archetype}"),
-                            SizedBox(
-                              height: 20,
-                            ),
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                          "${S.of(context).archtype}: ${widget.card.archetype}"),
+                                      Divider(),
+                                    ],
+                                  ),
+
                             widget.card.atk == null
                                 ? SizedBox()
-                                : Text("Atk: ${widget.card.atk}",
-                                    style: TextStyle(fontSize: 20)),
-                            widget.card.def == null
-                                ? SizedBox()
-                                : Text("Def: ${widget.card.def}",
-                                    style: TextStyle(fontSize: 20)),
+                                : Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "${S.of(context).atk}: ${widget.card.atk} / ${S.of(context).def}: ${widget.card.def}",
+                                        style: TextStyle(fontSize: 12),
+                                      ),
+                                      Divider(),
+                                    ],
+                                  ),
+
                             widget.card.banlistInfo == null
                                 ? SizedBox()
                                 : Column(
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      SizedBox(height: 20),
-                                      Text("Banlist"),
+                                      Text("${S.of(context).banlist}"),
                                       widget.card.banlistInfo.banTcg == null
                                           ? SizedBox()
                                           : Text(
@@ -106,6 +147,10 @@ class _CardDetailsState extends State<CardDetails> {
                                           ? SizedBox()
                                           : Text(
                                               "OCG: ${widget.card.banlistInfo.banOcg}"),
+                                      widget.card.banlistInfo.banGoat == null
+                                          ? SizedBox()
+                                          : Text(
+                                              "Goat: ${widget.card.banlistInfo.banGoat}"),
                                     ],
                                   ),
 
@@ -140,7 +185,7 @@ class CardViewer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Card")),
+      appBar: AppBar(),
       body: Container(
           child: PhotoView(
         enableRotation: true,

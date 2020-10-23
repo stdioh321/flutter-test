@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ygo/components/filter_item.dart';
+import 'package:ygo/generated/l10n.dart';
 import 'package:ygo/models/card_filter.dart';
 import 'package:ygo/services/filters_service.dart';
 import 'package:basic_utils/basic_utils.dart' as basic;
@@ -41,6 +42,9 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 10,
+              ),
               FloatingActionButton(
                 backgroundColor: Colors.green,
                 child: Icon(
@@ -59,10 +63,10 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
             labelPadding: EdgeInsets.all(15),
             tabs: [
               Text(
-                "Monster",
+                S.of(context).monster,
               ),
               Text(
-                "Spell/Trap",
+                "${S.of(context).spell}/${S.of(context).trap}",
               ),
             ],
           ),
@@ -82,7 +86,7 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Monster Type",
+                          "${S.of(context).cardType}",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w900),
                         ),
@@ -108,7 +112,7 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Attribute",
+                          "${S.of(context).attribute}",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w900),
                         ),
@@ -135,7 +139,7 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Monster Type",
+                          "${S.of(context).monsterType}",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w900),
                         ),
@@ -184,7 +188,7 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Level/Rank",
+                          "${S.of(context).level}/${S.of(context).rank}",
                           style: TextStyle(
                               fontSize: 20, fontWeight: FontWeight.w900),
                         ),
@@ -219,7 +223,7 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Spell Type",
+                          "${S.of(context).spellType}",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w900,
@@ -246,7 +250,7 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
                       Container(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "Trap Type",
+                          "${S.of(context).trapType}",
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w900,

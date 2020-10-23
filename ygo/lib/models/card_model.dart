@@ -137,31 +137,64 @@ class CardModel {
 }
 
 class BanlistInfo {
+  String _banGoat;
   String _banTcg;
   String _banOcg;
 
-  BanlistInfo({String banTcg, String banOcg}) {
+  BanlistInfo({String banGoat, String banTcg, String banOcg}) {
+    this._banGoat = banGoat;
     this._banTcg = banTcg;
     this._banOcg = banOcg;
   }
 
+  String get banGoat => _banGoat;
+  set banGoat(String banGoat) => _banGoat = banGoat;
   String get banTcg => _banTcg;
   set banTcg(String banTcg) => _banTcg = banTcg;
   String get banOcg => _banOcg;
   set banOcg(String banOcg) => _banOcg = banOcg;
 
   BanlistInfo.fromJson(Map<String, dynamic> json) {
+    _banGoat = json['ban_goat'];
     _banTcg = json['ban_tcg'];
     _banOcg = json['ban_ocg'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['ban_goat'] = this._banGoat;
     data['ban_tcg'] = this._banTcg;
     data['ban_ocg'] = this._banOcg;
     return data;
   }
 }
+
+// class BanlistInfo {
+//   String _banTcg;
+//   String _banOcg;
+
+//   BanlistInfo({String banTcg, String banOcg}) {
+//     this._banTcg = banTcg;
+//     this._banOcg = banOcg;
+//   }
+
+//   String get banTcg => _banTcg;
+//   set banTcg(String banTcg) => _banTcg = banTcg;
+//   String get banOcg => _banOcg;
+//   set banOcg(String banOcg) => _banOcg = banOcg;
+
+//   BanlistInfo.fromJson(Map<String, dynamic> json) {
+//     _banTcg = json['ban_tcg'];
+//     _banOcg = json['ban_ocg'];
+//   }
+
+//   Map<String, dynamic> toJson() {
+//     final Map<String, dynamic> data = new Map<String, dynamic>();
+//     data['ban_tcg'] = this._banTcg;
+//     data['ban_ocg'] = this._banOcg;
+//     return data;
+//   }
+// }
 
 class CardSets {
   String _setName;

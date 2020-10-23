@@ -8,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:http/http.dart';
+import 'package:intl/intl.dart';
 import 'package:load/load.dart';
 import 'package:simple_search_bar/simple_search_bar.dart';
 import 'package:ygo/components/card_filters_modal.dart';
+import 'package:ygo/generated/l10n.dart';
 import 'package:ygo/models/card_filter.dart';
 import 'package:ygo/models/card_model.dart';
 import 'package:ygo/routes/routes.dart';
@@ -35,11 +37,12 @@ class _CardsListState extends State<CardsList>
   Status status = Status.none;
   TextEditingController _txtCtrl = TextEditingController();
   final ScrollController _scrollCtrl = ScrollController();
-
+  bool currLang = false;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     loadCards();
     // loadCards();
   }
@@ -294,41 +297,42 @@ class _CardsListState extends State<CardsList>
                         height: 25,
                       ),
                     ),
-                    DropdownMenuItem(
-                      value: 'fr',
-                      child: Image.asset(
-                        "assets/images/flags/fr.png",
-                        // placeholder: "assets/images/flags/pt.png",
-                        fit: BoxFit.contain,
-                        width: 25,
-                        height: 25,
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'it',
-                      child: Image.asset(
-                        "assets/images/flags/it.png",
-                        // placeholder: "assets/images/flags/pt.png",
-                        fit: BoxFit.contain,
-                        width: 25,
-                        height: 25,
-                      ),
-                    ),
-                    DropdownMenuItem(
-                      value: 'de',
-                      child: Image.asset(
-                        "assets/images/flags/de.png",
-                        // placeholder: "assets/images/flags/pt.png",
-                        fit: BoxFit.contain,
-                        width: 25,
-                        height: 25,
-                      ),
-                    ),
+                    // DropdownMenuItem(
+                    //   value: 'fr',
+                    //   child: Image.asset(
+                    //     "assets/images/flags/fr.png",
+                    //     // placeholder: "assets/images/flags/pt.png",
+                    //     fit: BoxFit.contain,
+                    //     width: 25,
+                    //     height: 25,
+                    //   ),
+                    // ),
+                    // DropdownMenuItem(
+                    //   value: 'it',
+                    //   child: Image.asset(
+                    //     "assets/images/flags/it.png",
+                    //     // placeholder: "assets/images/flags/pt.png",
+                    //     fit: BoxFit.contain,
+                    //     width: 25,
+                    //     height: 25,
+                    //   ),
+                    // ),
+                    // DropdownMenuItem(
+                    //   value: 'de',
+                    //   child: Image.asset(
+                    //     "assets/images/flags/de.png",
+                    //     // placeholder: "assets/images/flags/pt.png",
+                    //     fit: BoxFit.contain,
+                    //     width: 25,
+                    //     height: 25,
+                    //   ),
+                    // ),
                   ],
                   onChanged: (value) async {
                     // print(value);
                     Utils.instance.removeFocus(context);
                     await Prefs.instance.prefs.setString("lang", value);
+                    S.load(Locale(value));
                     FiltersService.getInstance().cardFilter.clear();
                     loadCards(lang: value);
 
@@ -359,8 +363,12 @@ class _CardsListState extends State<CardsList>
               child: TextField(
                 decoration: InputDecoration(
                   icon: Icon(Icons.search),
-                  hintText: "Type your card...",
+                  hintText: "${S.of(context).typeCard}...",
                   border: InputBorder.none,
+                ),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
                 ),
                 enabled: status == Status.ok,
                 controller: _txtCtrl,
@@ -388,7 +396,7 @@ class _CardsListState extends State<CardsList>
     if (status == Status.loading) {
       return Center(
         child: Text(
-          "Loading",
+          S.of(context).loading,
           style: TextStyle(
             fontWeight: FontWeight.w900,
             fontSize: 20,
@@ -401,7 +409,7 @@ class _CardsListState extends State<CardsList>
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Error",
+              S.of(context).error,
               style: TextStyle(
                 fontWeight: FontWeight.w900,
                 fontSize: 20,
@@ -412,7 +420,7 @@ class _CardsListState extends State<CardsList>
             ),
             RaisedButton.icon(
               icon: Icon(Icons.refresh),
-              label: Text("Retry"),
+              label: Text(S.of(context).retry),
               onPressed: () {
                 loadCards(
                   lang: Prefs.instance.prefs.get("lang"),
@@ -426,7 +434,7 @@ class _CardsListState extends State<CardsList>
       if (cards.length == 0)
         return Center(
           child: Text(
-            "Empty",
+            S.of(context).empty,
             style: TextStyle(
               fontWeight: FontWeight.w900,
               fontSize: 20,
@@ -499,19 +507,49 @@ class _CardsListState extends State<CardsList>
                             // Utils.instance.removeFocus(context);
                             // appBarController.stream.add(false);
                           },
-                          child: CachedNetworkImage(
-                            imageUrl: e.cardImages[0].imageUrl,
-                            placeholder: (context, url) {
-                              return Container(
-                                  child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CircularProgressIndicator(),
-                                ],
-                              ));
-                              // return Image.asset(
-                              //     "assets/images/card_placeholder.png");
-                            },
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CachedNetworkImage(
+                                imageUrl: e.cardImages[0].imageUrl,
+                                placeholder: (context, url) {
+                                  return Container(
+                                      child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(),
+                                    ],
+                                  ));
+                                  // return Image.asset(
+                                  //     "assets/images/card_placeholder.png");
+                                },
+                              ),
+                              Container(
+                                alignment: Alignment.topRight,
+                                child: (() {
+                                  if (e.banlistInfo != null) {
+                                    if (e.banlistInfo.banTcg != null) {
+                                      String tmpImg = "forbidden.png";
+                                      if (e.banlistInfo.banTcg
+                                              .trim()
+                                              .toLowerCase() ==
+                                          "semi-limited")
+                                        tmpImg = "limited-2.png";
+                                      else if (e.banlistInfo.banTcg
+                                              .trim()
+                                              .toLowerCase() ==
+                                          "limited") tmpImg = "limited-1.png";
+                                      return Image.asset(
+                                        "assets/images/${tmpImg}",
+                                        width: 20,
+                                        height: 20,
+                                      );
+                                    }
+                                  }
+                                  return SizedBox();
+                                })(),
+                              ),
+                            ],
                           ),
                           // FadeInImage.assetNetwork(
                           //   fit: BoxFit.contain,
@@ -530,14 +568,14 @@ class _CardsListState extends State<CardsList>
         Container(
           alignment: Alignment.topLeft,
           // padding: ,
-          padding: EdgeInsets.only(top: 25),
+          padding: EdgeInsets.only(top: 40),
           child: CircleAvatar(
-            maxRadius: 12,
+            maxRadius: 14,
             backgroundColor: Colors.grey[100],
             child: Text(
               "${cards.length}",
               style: TextStyle(
-                fontSize: 6,
+                fontSize: 8,
                 fontWeight: FontWeight.bold,
                 color: cards.length % 2 == 0 ? Colors.red : Colors.blue,
               ),
