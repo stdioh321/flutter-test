@@ -24,9 +24,9 @@ List|Add user
 :-:|:-:
 ![List](docs/screenshots/screenshot_01.png) | ![Add User](docs/screenshots/screenshot_02.png)
 
-Edit User|
-:-:|:-:|
-![Edit User](docs/screenshots/screenshot_03.png) |
+|Edit User|
+|:-:|:-:|
+|![Edit User](docs/screenshots/screenshot_03.png) |
 
 # References
 - [Flutter](https://flutter.dev/)
