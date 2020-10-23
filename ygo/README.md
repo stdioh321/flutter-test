@@ -1,7 +1,7 @@
 # YgoCards
 
 Projects created with flutter.<br/>
-Search and find your favorites
+Search and find your favorites Yu-Gi-Oh cards.
 
 # Demo Web
 **[https://ygocards.netlify.app/](https://ygocards.netlify.app/)**
@@ -42,4 +42,4 @@ $ flutter run
 - [YgoProDeck Api](https://db.ygoprodeck.com/api-guide/)
 - [Flutter](https://flutter.dev/)
 - [Dart/Flutter packages](https://pub.dev/)
-- [Flutter Material Color Picker](https://pub.dev/packages/flutter_material_color_picker)
+- [Intl](https://pub.dev/packages/intl)
