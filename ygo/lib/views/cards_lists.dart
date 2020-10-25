@@ -227,6 +227,28 @@ class _CardsListState extends State<CardsList>
           return true;
         }).toList();
 
+        // Filter per Banlist
+        cards = cards.where((el) {
+          if (FiltersService.getInstance()
+              .cardFilter
+              .banlist
+              .containsValue(true)) {
+            return FiltersService.getInstance()
+                .cardFilter
+                .banlist
+                .entries
+                .any((element) {
+              if (el?.banlistInfo?.banTcg != null &&
+                  el.banlistInfo.banTcg.toLowerCase().trim() == element.key &&
+                  element.value == true) {
+                return true;
+              }
+              return false;
+            });
+          }
+          return true;
+        }).toList();
+
         // Filter Search Text
         cards = cards.where((el) {
           if (el.name.toLowerCase().indexOf(search) > -1) return true;

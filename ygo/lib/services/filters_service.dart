@@ -62,6 +62,11 @@ class FiltersService {
     "counter",
     "continuous",
   ];
+  List<String> banlist = [
+    "semi-limited",
+    "limited",
+    "banned",
+  ];
   FiltersService() {
     print("FiltersService Constructor");
   }

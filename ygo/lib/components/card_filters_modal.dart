@@ -211,6 +211,31 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
                           );
                         }),
                       ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "${S.of(context).banlist}",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w900),
+                        ),
+                      ),
+                      Wrap(
+                        children: FiltersService.getInstance().banlist.map((e) {
+                          return FilterItem(
+                            callback: (bool v) {
+                              FiltersService.getInstance()
+                                  .cardFilter
+                                  .banlist[e] = v;
+                            },
+                            itemValue: FiltersService.getInstance()
+                                    .cardFilter
+                                    .banlist[e] ??
+                                false,
+                            title:
+                                basic.StringUtils.capitalize(e, allWords: true),
+                          );
+                        }).toList(),
+                      ),
                     ],
                   ),
                 ),
@@ -271,6 +296,31 @@ class _CardFiltersModalState extends State<CardFiltersModal> {
                               FiltersService.getInstance().cardFilter.trap[e] =
                                   v;
                             },
+                          );
+                        }).toList(),
+                      ),
+                      Container(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          "${S.of(context).banlist}",
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w900),
+                        ),
+                      ),
+                      Wrap(
+                        children: FiltersService.getInstance().banlist.map((e) {
+                          return FilterItem(
+                            callback: (bool v) {
+                              FiltersService.getInstance()
+                                  .cardFilter
+                                  .banlist[e] = v;
+                            },
+                            itemValue: FiltersService.getInstance()
+                                    .cardFilter
+                                    .banlist[e] ??
+                                false,
+                            title:
+                                basic.StringUtils.capitalize(e, allWords: true),
                           );
                         }).toList(),
                       ),

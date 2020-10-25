@@ -1,3 +1,0 @@
-class CardListFilters {
-  int level;
-}

@@ -6,6 +6,7 @@ class CardFilter {
   Map<String, bool> level = Map();
   Map<String, bool> spell = Map();
   Map<String, bool> trap = Map();
+  Map<String, bool> banlist = Map();
 
   clear() {
     type = Map();
@@ -15,6 +16,7 @@ class CardFilter {
     level = Map();
     spell = Map();
     trap = Map();
+    banlist = Map();
   }
 
   bool hasActiveFilter() {
