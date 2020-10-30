@@ -10,6 +10,7 @@ import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:load/load.dart';
+import 'package:path_provider/path_provider.dart' as pathProv;
 import 'package:simple_search_bar/simple_search_bar.dart';
 import 'package:ygo/components/card_filters_modal.dart';
 import 'package:ygo/generated/l10n.dart';
@@ -44,7 +45,53 @@ class _CardsListState extends State<CardsList>
     super.initState();
 
     loadCards();
+    // loadCardsLocally();
     // loadCards();
+  }
+
+  Future<List<CardModel>> loadCardsLocally() async {
+    try {
+      print('loadCardsLocally');
+      Directory libDir = await pathProv.getApplicationDocumentsDirectory();
+      String fPath = "${libDir.path}/cards.json";
+      File fCards = File(fPath);
+      var myList = jsonDecode(fCards.readAsStringSync()) as List;
+      return myList.map((e) {
+        return CardModel.fromJson(e);
+      }).toList();
+    } catch (e) {}
+    return null;
+  }
+
+  Future<bool> hasCardFile() async {
+    try {
+      Directory libDir = await pathProv.getApplicationDocumentsDirectory();
+      String fPath = "${libDir.path}/cards.json";
+      File fCards = File(fPath);
+      return fCards.existsSync();
+    } catch (e) {}
+    return false;
+  }
+
+  removeCardFile() async {
+    try {
+      Directory libDir = await pathProv.getApplicationDocumentsDirectory();
+      String fPath = "${libDir.path}/cards.json";
+      File fCards = File(fPath);
+      fCards.deleteSync();
+    } catch (e) {}
+  }
+
+  saveCardsLocally(List<CardModel> cardList) async {
+    try {
+      Directory libDir = await pathProv.getApplicationDocumentsDirectory();
+      String fPath = "${libDir.path}/cards.json";
+      File fCards = File(fPath);
+      fCards.writeAsStringSync(jsonEncode(cardList));
+    } catch (e) {
+      print("Error");
+      print(e);
+    }
   }
 
   _resetAll() {
@@ -60,15 +107,26 @@ class _CardsListState extends State<CardsList>
     _resetAll();
     setState(() {});
     try {
-      Response resp = await Api.getInstance()
-          .getCards(lang: Prefs.instance.prefs.get("lang") ?? "en");
-      if (resp.statusCode != 200) throw HttpException("Http Error");
+      if (await hasCardFile()) {
+        _cards = await loadCardsLocally();
+      } else {
+        Response resp = await Api.getInstance()
+            .getCards(lang: Prefs.instance.prefs.get("lang") ?? "en");
+        if (resp.statusCode != 200) throw HttpException("Http Error");
 
-      var tmpCardList = (jsonDecode(resp.body) as Map)['data'] as List<dynamic>;
-      tmpCardList.forEach((el) {
-        _cards.add(CardModel.fromJson(el));
-      });
+        var tmpCardList =
+            (jsonDecode(resp.body) as Map)['data'] as List<dynamic>;
+        tmpCardList.forEach((el) {
+          _cards.add(CardModel.fromJson(el));
+        });
+        saveCardsLocally(_cards);
+      }
+
+      // }else{
+      //   _cards = await loadCardsLocally();
+      // }
       cards = [..._cards];
+      //
       status = Status.ok;
     } catch (e) {
       print("Error");
@@ -356,6 +414,7 @@ class _CardsListState extends State<CardsList>
                     await Prefs.instance.prefs.setString("lang", value);
                     S.load(Locale(value));
                     FiltersService.getInstance().cardFilter.clear();
+                    await removeCardFile();
                     loadCards(lang: value);
 
                     setState(() {});

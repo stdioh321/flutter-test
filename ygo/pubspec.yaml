@@ -34,7 +34,8 @@ dependencies:
   shared_preferences: ^0.5.12+2
   basic_utils: ^2.6.3
   intl: ^0.16.1
-  
+  path_provider: ^1.6.22
+
 
   # flutter_localizations:
   #   sdk: flutter
