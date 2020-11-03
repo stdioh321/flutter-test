@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -49,12 +50,22 @@ class _CardsListState extends State<CardsList>
     // loadCards();
   }
 
+  Future<File> getCardsFile({String fName: 'cards.json'}) async {
+    try {
+      Directory libDir = await pathProv.getApplicationDocumentsDirectory();
+      String fPath = "${libDir.path}/${fName}";
+      File fCards = File(fPath);
+      return fCards;
+    } catch (e) {}
+    return null;
+  }
+
   Future<List<CardModel>> loadCardsLocally() async {
     try {
       print('loadCardsLocally');
-      Directory libDir = await pathProv.getApplicationDocumentsDirectory();
-      String fPath = "${libDir.path}/cards.json";
-      File fCards = File(fPath);
+      // Directory libDir = await pathProv.getApplicationDocumentsDirectory();
+      // String fPath = "${libDir.path}/cards.json";
+      File fCards = await getCardsFile();
       var myList = jsonDecode(fCards.readAsStringSync()) as List;
       return myList.map((e) {
         return CardModel.fromJson(e);
@@ -65,9 +76,9 @@ class _CardsListState extends State<CardsList>
 
   Future<bool> hasCardFile() async {
     try {
-      Directory libDir = await pathProv.getApplicationDocumentsDirectory();
-      String fPath = "${libDir.path}/cards.json";
-      File fCards = File(fPath);
+      // Directory libDir = await pathProv.getApplicationDocumentsDirectory();
+      // String fPath = "${libDir.path}/cards.json";
+      File fCards = await getCardsFile();
       return fCards.existsSync();
     } catch (e) {}
     return false;
@@ -75,9 +86,9 @@ class _CardsListState extends State<CardsList>
 
   removeCardFile() async {
     try {
-      Directory libDir = await pathProv.getApplicationDocumentsDirectory();
-      String fPath = "${libDir.path}/cards.json";
-      File fCards = File(fPath);
+      // Directory libDir = await pathProv.getApplicationDocumentsDirectory();
+      // String fPath = "${libDir.path}/cards.json";
+      File fCards = await getCardsFile();
       fCards.deleteSync();
     } catch (e) {}
   }
@@ -122,11 +133,7 @@ class _CardsListState extends State<CardsList>
         saveCardsLocally(_cards);
       }
 
-      // }else{
-      //   _cards = await loadCardsLocally();
-      // }
       cards = [..._cards];
-      //
       status = Status.ok;
     } catch (e) {
       print("Error");
@@ -579,12 +586,16 @@ class _CardsListState extends State<CardsList>
                                 },
                               ),
                             );
-                            // print(_previousScrollOffset);
-                            _scrollCtrl.animateTo(
-                              _previousScrollOffset,
-                              curve: Curves.easeInOut,
-                              duration: Duration(milliseconds: 500),
-                            );
+                            // print("HERE");
+                            Timer(Duration(milliseconds: 100), () {
+                              print(_previousScrollOffset);
+                              _scrollCtrl.jumpTo(_previousScrollOffset);
+                            });
+                            // _scrollCtrl.animateTo(
+                            //   _previousScrollOffset,
+                            //   curve: Curves.easeInOut,
+                            //   duration: Duration(milliseconds: 500),
+                            // );
                             // Utils.instance.removeFocus(context);
                             // appBarController.stream.add(false);
                           },
@@ -593,16 +604,20 @@ class _CardsListState extends State<CardsList>
                             children: [
                               CachedNetworkImage(
                                 imageUrl: e.cardImages[0].imageUrl,
+                                errorWidget: (_, url, error) {
+                                  return Image.asset(
+                                      "assets/images/card_placeholder.png");
+                                },
                                 placeholder: (context, url) {
                                   return Container(
-                                      child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      CircularProgressIndicator(),
-                                    ],
-                                  ));
-                                  // return Image.asset(
-                                  //     "assets/images/card_placeholder.png");
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        CircularProgressIndicator(),
+                                      ],
+                                    ),
+                                  );
                                 },
                               ),
                               Container(

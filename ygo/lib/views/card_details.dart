@@ -1,5 +1,7 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
+import 'package:ygo/components/card_viewer.dart';
 import 'package:ygo/generated/l10n.dart';
 import 'package:ygo/models/card_model.dart';
 
@@ -45,21 +47,37 @@ class _CardDetailsState extends State<CardDetails> {
                           context,
                           MaterialPageRoute(
                             builder: (BuildContext context) => CardViewer(
-                              url: widget.card.cardImages[0].imageUrl,
+                              card: widget.card,
                             ),
                           ),
                         );
                       },
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                            maxHeight: MediaQuery.of(context).size.height / 2,
-                            maxWidth:
-                                (MediaQuery.of(context).size.width / 2) - 20),
-                        child: FadeInImage.assetNetwork(
-                          image: widget.card.cardImages[0].imageUrl,
-                          placeholder: 'assets/images/card_placeholder.png',
-                        ),
-                      ),
+                          constraints: BoxConstraints(
+                              maxHeight: MediaQuery.of(context).size.height / 2,
+                              maxWidth:
+                                  (MediaQuery.of(context).size.width / 2) - 20),
+                          child: CachedNetworkImage(
+                            imageUrl: widget.card.cardImages[0].imageUrl,
+                            errorWidget: (_, url, error) {
+                              return Image.asset(
+                                  "assets/images/card_placeholder.png");
+                            },
+                            placeholder: (context, url) {
+                              return Container(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CircularProgressIndicator(),
+                                  ],
+                                ),
+                              );
+                            },
+                          )
+                          // FadeInImage.assetNetwork(
+
+                          // ),
+                          ),
                     ),
                     Expanded(
                       flex: 1,
@@ -175,23 +193,6 @@ class _CardDetailsState extends State<CardDetails> {
           ),
         ),
       ),
-    );
-  }
-}
-
-class CardViewer extends StatelessWidget {
-  final String url;
-  CardViewer({@required this.url});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Container(
-          child: PhotoView(
-        enableRotation: true,
-        // initialScale: 0.8,
-        imageProvider: NetworkImage(url),
-      )),
     );
   }
 }
