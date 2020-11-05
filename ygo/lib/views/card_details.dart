@@ -184,8 +184,10 @@ class _CardDetailsState extends State<CardDetails> {
                 height: 20,
               ),
               Container(
+                alignment: Alignment.topLeft,
                 child: Text(
                   "${widget.card.desc}",
+                  textAlign: TextAlign.start,
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               )

@@ -45,20 +45,6 @@ class _CardViewerState extends State<CardViewer> {
     return FutureBuilder(
       builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
         return Scaffold(
-          floatingActionButton: _pageCtrl?.page < widget.card.cardImages.length
-              ? FloatingActionButton(
-                  onPressed: () {
-                    try {
-                      // print(_pageCtrl.page ?? "Nothing");
-                      _pageCtrl.nextPage(
-                        curve: Curves.easeInCubic,
-                        duration: Duration(milliseconds: 100),
-                      );
-                    } catch (e) {}
-                  },
-                  child: Icon(Icons.arrow_forward),
-                )
-              : SizedBox(),
           appBar: AppBar(
             title: Text(widget.card.name, style: TextStyle(fontSize: 13)),
           ),
@@ -92,10 +78,7 @@ class _CardViewerState extends State<CardViewer> {
                     );
                   },
                 ),
-                Container(
-                  alignment: Alignment.centerRight,
-                  child: Text("HERE: ${currPage()}"),
-                ),
+                
               ],
             )),
           ),

@@ -146,7 +146,7 @@ class _CardsListState extends State<CardsList>
   }
 
   onExecFilter() {
-    print("onExecFilter");
+    // print("onExecFilter");
     if (status != Status.ok) return;
 
     _debouncer.run(() {
