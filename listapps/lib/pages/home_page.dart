@@ -63,7 +63,9 @@ class _HomePageState extends State<HomePage> {
         widget.unityTech = "Il2cpp";
 
       if (aF.name.toLowerCase() ==
-          "assets/bin/Data/Resources/unity_builtin_extra".toLowerCase()) {
+              "assets/bin/Data/Resources/unity_builtin_extra".toLowerCase() ||
+          aF.name.toLowerCase() ==
+              "assets/bin/Data/unity default resources".toLowerCase()) {
         // print(aF.name);
         List content = aF.content;
         setState(() {

@@ -89,7 +89,9 @@ android {
             // proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             // shrinkResources false
             // minifyEnabled false
+            
             signingConfig signingConfigs.release
+            // signingConfig signingConfigs.debug
         }   
         debug{
             signingConfig signingConfigs.debug

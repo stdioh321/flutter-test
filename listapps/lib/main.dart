@@ -81,11 +81,6 @@ class MyAppState extends State<MyApp> {
           imagePath: "assets/images/splash.gif",
           duration: 2,
         ),
-        // initialRoute: "/",
-        // routes: {
-        //   // "/": (context) => ListApps(),
-        //   "/home": (context) => HomePage(),
-        // },
       ),
     );
   }
