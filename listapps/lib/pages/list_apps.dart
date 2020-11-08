@@ -35,12 +35,18 @@ class _ListAppsState extends State<ListApps> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    // FirebaseAdMob.instance
-    //     .initialize(appId: "ca-app-pub-9436128036799685~9366736514");
+    _initAdMob();
     this.loadApps();
     // _handleAds();
     // _loadAdBanner();
     // _handleLocalNotification();
+  }
+
+  Future<void> _initAdMob() async {
+    // TODO: Initialize AdMob SDK
+    print("Initialize AdMob SDK");
+    print(await FirebaseAdMob.instance
+        .initialize(appId: 'ca-app-pub-9436128036799685~9366736514'));
   }
 
   _handleSignIn() async {
@@ -234,7 +240,7 @@ class _ListAppsState extends State<ListApps> {
                 try {
                   Utils.instance.removeFocus(context);
 
-                  adMob.disposeBannerAd();
+                  // adMob.disposeBannerAd();
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -244,11 +250,11 @@ class _ListAppsState extends State<ListApps> {
                     ),
                   );
                   countDisplayAd++;
-                  if (countDisplayAd >= 3) {
+                  if (countDisplayAd >= 6) {
                     countDisplayAd = 0;
                     await adMob.loadInterstitialAd();
                   }
-                  await adMob.loadBannerAd();
+                  // await adMob.loadBannerAd();
                 } catch (e) {}
               },
               leading: Column(
@@ -340,11 +346,17 @@ class _ListAppsState extends State<ListApps> {
 
   @override
   Widget build(BuildContext context) {
-    print("=============================================================");
-    print("build");
-    print("=============================================================");
+    // print("=============================================================");
+    // print("build");
+    // print("=============================================================");
 
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          adMob.loadInterstitialAd();
+        },
+        child: Icon(Icons.send),
+      ),
       bottomNavigationBar: Container(
         height: adMob?.isBannerOn == true && adMob?.bannerAd != null ? 53 : 0,
         // child: Text("Anything"),

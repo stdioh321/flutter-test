@@ -106,6 +106,10 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        bottomNavigationBar: Container(
+          height: 53,
+          // child: Text("Anything"),
+        ),
         appBar: AppBar(
           title: Text(
             "${widget.app.appName}",

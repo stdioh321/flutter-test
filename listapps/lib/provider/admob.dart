@@ -22,7 +22,10 @@ class AdMobProvider with ChangeNotifier {
       keywords: <String>['flutterio', 'beautiful apps'],
       contentUrl: 'https://flutter.io',
       childDirected: false,
-      testDevices: <String>["6C37F434C42960A6B4A43A0E5B46876C"],
+      testDevices: <String>[
+        "6C37F434C42960A6B4A43A0E5B46876C",
+        "95a23a497300e893"
+      ],
     );
   }
 
@@ -50,8 +53,10 @@ class AdMobProvider with ChangeNotifier {
   loadInterstitialAd() async {
     try {
       interstitialAd = InterstitialAd(
-          adUnitId: "ca-app-pub-9436128036799685/7772074502",
-          listener: (MobileAdEvent ev) {});
+        targetingInfo: targetingInfo,
+        adUnitId: "ca-app-pub-9436128036799685/7772074502",
+        listener: (MobileAdEvent ev) {},
+      );
       await interstitialAd.load();
       await interstitialAd.show();
     } catch (e) {

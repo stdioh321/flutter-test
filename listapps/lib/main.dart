@@ -1,4 +1,5 @@
 import 'package:animated_splash/animated_splash.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:listapps/pages/list_apps.dart';
@@ -37,7 +38,14 @@ void main() async {
   LocalNotificationHandler.instance.init((String payload) {
     print("Payload:::: ${payload}");
   });
+  // await _initAdMob();
   runApp(MyApp());
+}
+
+Future<void> _initAdMob() {
+  // TODO: Initialize AdMob SDK
+  print("Initialize AdMob SDK");
+  return FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-9436128036799685~9366736514');
 }
 
 class MyApp extends StatefulWidget {
