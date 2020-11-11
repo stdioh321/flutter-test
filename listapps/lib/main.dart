@@ -76,7 +76,7 @@ class MyAppState extends State<MyApp> {
         return AdMobProvider();
       },
       child: MaterialApp(
-        title: 'List Apps',
+        title: 'App Unity version',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: primaryColor,
