@@ -9,14 +9,14 @@
         "client_info": {
             "mobilesdk_app_id": "1:673634186219:android:625bb574170dc23c525fae",
             "android_client_info": {
-                "package_name": "com.example.listapps"
+                "package_name": "br.polygon4games.listapps"
             }
         },
         "oauth_client": [{
                 "client_id": "673634186219-k4udhvmt72qa3o4eu4blfmmctg82t3fp.apps.googleusercontent.com",
                 "client_type": 1,
                 "android_info": {
-                    "package_name": "com.example.listapps",
+                    "package_name": "br.polygon4games.listapps",
                     "certificate_hash": "c47928d52ddd5eed7e3893795c9da53556f084b6"
                 }
             },
@@ -24,7 +24,7 @@
                 "client_id": "673634186219-jlg5bnu6c3q85crhmjeqtkqnduv418hb.apps.googleusercontent.com",
                 "client_type": 1,
                 "android_info": {
-                    "package_name": "com.example.listapps",
+                    "package_name": "br.polygon4games.listapps",
                     "certificate_hash": "bb8908b4ce277179d58ea9d46f17d8eabb758a67"
                 }
             },

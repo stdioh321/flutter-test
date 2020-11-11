@@ -4,13 +4,9 @@ import 'package:device_apps/device_apps.dart';
 import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:listapps/pages/home_page.dart';
+import 'package:listapps/pages/app_details.dart';
 import 'package:listapps/provider/admob.dart';
-import 'package:listapps/services/NotificationHelper.dart';
-import 'package:listapps/services/admob.dart';
-import 'package:listapps/main.dart';
 import 'package:listapps/services/utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
@@ -49,25 +45,25 @@ class _ListAppsState extends State<ListApps> {
         .initialize(appId: 'ca-app-pub-9436128036799685~9366736514'));
   }
 
-  _handleSignIn() async {
-    try {
-      _handleSignOut();
-      var gAccount = await _googleSignIn.signIn();
+  // _handleSignIn() async {
+  //   try {
+  //     _handleSignOut();
+  //     var gAccount = await _googleSignIn.signIn();
 
-      Utils.instance
-          .displayDialog(ctx: context, content: gAccount.email, title: "");
-    } catch (e) {
-      print(e);
-    }
-  }
+  //     Utils.instance
+  //         .displayDialog(ctx: context, content: gAccount.email, title: "");
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
-  _handleSignOut() async {
-    try {
-      _googleSignIn.signOut();
-    } catch (e) {
-      print(e);
-    }
-  }
+  // _handleSignOut() async {
+  //   try {
+  //     _googleSignIn.signOut();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 
   void loadApps() async {
     var status = await Permission.storage.status;
@@ -244,7 +240,7 @@ class _ListAppsState extends State<ListApps> {
                   await Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (BuildContext context) => HomePage(
+                      builder: (BuildContext context) => AppDetails(
                         app: app,
                       ),
                     ),
@@ -351,12 +347,6 @@ class _ListAppsState extends State<ListApps> {
     // print("=============================================================");
 
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          adMob.loadInterstitialAd();
-        },
-        child: Icon(Icons.send),
-      ),
       bottomNavigationBar: Container(
         height: adMob?.isBannerOn == true && adMob?.bannerAd != null ? 53 : 0,
         // child: Text("Anything"),
@@ -403,31 +393,6 @@ class _ListAppsState extends State<ListApps> {
           // ),
         ],
       ),
-      // persistentFooterButtons: [
-      //   Container(
-      //     height: 100,
-      //     child: Container(
-      //         // child: Text("sss"),
-      //         ),
-      //   ),
-      // ],
-      // extendBody: true,
-
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      // floatingActionButton: FloatingActionButton(
-      //   mini: true,
-      //   child: Icon(Icons.timer),
-      //   onPressed: () async {
-      //     // NotificationHelper
-      //     LocalNotificationHandler.instance.scheduleNotification();
-      //   },
-      // ),
     );
-  }
-
-  showNotification() async {
-    // initializePlatformSpecifics();
-
-    LocalNotificationHandler.instance.showNotification();
   }
 }

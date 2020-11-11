@@ -13,19 +13,19 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:charset_converter/charset_converter.dart';
 import 'package:device_apps/device_apps.dart';
 
-class HomePage extends StatefulWidget {
+class AppDetails extends StatefulWidget {
   @required
   ApplicationWithIcon app;
   String isUnity;
   String unityTech;
 
-  HomePage({this.app});
+  AppDetails({this.app});
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _AppDetailsState createState() => _AppDetailsState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _AppDetailsState extends State<AppDetails> {
   @override
   void initState() {
     // TODO: implement initState
@@ -62,11 +62,8 @@ class _HomePageState extends State<HomePage> {
       else if (aF.name.contains(RegExp(r'il2cpp\.so$', caseSensitive: false)))
         widget.unityTech = "Il2cpp";
 
-      if (aF.name.toLowerCase() ==
-              "assets/bin/Data/Resources/unity_builtin_extra".toLowerCase() ||
-          aF.name.toLowerCase() ==
-              "assets/bin/Data/unity default resources".toLowerCase()) {
-        // print(aF.name);
+      if (aF.name.toLowerCase().endsWith("unity_builtin_extra") ||
+          aF.name.toLowerCase().endsWith("unity default resources")) {
         List content = aF.content;
         setState(() {
           widget.isUnity = utf8.decode(content.sublist(20, 32));

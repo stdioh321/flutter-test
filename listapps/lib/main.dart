@@ -3,6 +3,7 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:listapps/pages/list_apps.dart';
+import 'package:listapps/pages/tmp.dart';
 import 'package:listapps/provider/admob.dart';
 import 'package:listapps/services/NotificationHelper.dart';
 import 'package:listapps/services/utils.dart';
@@ -32,12 +33,12 @@ void main() async {
   Wakelock.enable();
   // Wakelock.enable();
 
-  await SystemChrome.setPreferredOrientations(
-      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-  // await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
-  LocalNotificationHandler.instance.init((String payload) {
-    print("Payload:::: ${payload}");
-  });
+  // await SystemChrome.setPreferredOrientations(
+  //     [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+  // // await BackgroundFetch.registerHeadlessTask(backgroundFetchHeadlessTask);
+  // LocalNotificationHandler.instance.init((String payload) {
+  //   print("Payload:::: ${payload}");
+  // });
   // await _initAdMob();
   runApp(MyApp());
 }
@@ -45,7 +46,8 @@ void main() async {
 Future<void> _initAdMob() {
   // TODO: Initialize AdMob SDK
   print("Initialize AdMob SDK");
-  return FirebaseAdMob.instance.initialize(appId: 'ca-app-pub-9436128036799685~9366736514');
+  return FirebaseAdMob.instance
+      .initialize(appId: 'ca-app-pub-9436128036799685~9366736514');
 }
 
 class MyApp extends StatefulWidget {
@@ -87,7 +89,7 @@ class MyAppState extends State<MyApp> {
         home: AnimatedSplash(
           home: ListApps(),
           imagePath: "assets/images/splash.gif",
-          duration: 2,
+          duration: 0,
         ),
       ),
     );

@@ -18,22 +18,26 @@ class AdMobProvider with ChangeNotifier {
   }
 
   AdMobProvider() {
+    _initAdMob();
     targetingInfo = MobileAdTargetingInfo(
       keywords: <String>['flutterio', 'beautiful apps'],
       contentUrl: 'https://flutter.io',
       childDirected: false,
-      testDevices: <String>[
-        "6C37F434C42960A6B4A43A0E5B46876C",
-        "95a23a497300e893"
-      ],
+      testDevices: <String>[],
     );
+  }
+  Future<void> _initAdMob() async {
+    // TODO: Initialize AdMob SDK
+    print("Initialize AdMob SDK");
+    await FirebaseAdMob.instance
+        .initialize(appId: 'ca-app-pub-9436128036799685~9366736514');
   }
 
   onBannerListen(event) {
     try {
       if (event == MobileAdEvent?.loaded) {
         isBannerOn = true;
-      } else if (event == MobileAdEvent?.failedToLoad) {
+      } else {
         isBannerOn = false;
       }
       print("=====================================================");
@@ -50,11 +54,12 @@ class AdMobProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  loadInterstitialAd() async {
+  loadInterstitialAd(
+      {String adUnitId: "ca-app-pub-9436128036799685/7772074502"}) async {
     try {
       interstitialAd = InterstitialAd(
         targetingInfo: targetingInfo,
-        adUnitId: "ca-app-pub-9436128036799685/7772074502",
+        adUnitId: adUnitId,
         listener: (MobileAdEvent ev) {},
       );
       await interstitialAd.load();
@@ -64,10 +69,11 @@ class AdMobProvider with ChangeNotifier {
     }
   }
 
-  loadBannerAd() async {
+  loadBannerAd(
+      {String adUnitId: "ca-app-pub-9436128036799685/7951203755"}) async {
     try {
       bannerAd = BannerAd(
-          adUnitId: "ca-app-pub-9436128036799685/5661750633",
+          adUnitId: adUnitId,
           size: AdSize.banner,
           // targetingInfo: targetingInfo,
           listener: onBannerListen);
