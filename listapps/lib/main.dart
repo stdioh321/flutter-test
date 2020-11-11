@@ -3,9 +3,7 @@ import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:listapps/pages/list_apps.dart';
-import 'package:listapps/pages/tmp.dart';
 import 'package:listapps/provider/admob.dart';
-import 'package:listapps/services/NotificationHelper.dart';
 import 'package:listapps/services/utils.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -76,7 +74,7 @@ class MyAppState extends State<MyApp> {
         return AdMobProvider();
       },
       child: MaterialApp(
-        title: 'App Unity version',
+        title: 'Unity App Version',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           primaryColor: primaryColor,
