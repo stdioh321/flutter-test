@@ -39,7 +39,7 @@ dependencies:
   permission_handler: ^5.0.1+1
   file_picker: ^1.13.1
   file_picker_web: any
-  dio: ^3.0.9
+  dio: ^5.0.3
   flutter_date_pickers: ^0.1.5
   universal_html: ^1.2.3
   load: ^0.1.6
